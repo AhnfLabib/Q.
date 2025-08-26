@@ -45,7 +45,7 @@ const Landing = () => {
     <div className="min-h-screen">
       {/* Simple Landing Header */}
       <header className="sticky top-0 z-50 w-full">
-        <div className="mx-4 mt-4 mb-6 px-6 py-4 glass-surface-strong rounded-2xl">
+        <div className="mx-4 mt-4 mb-6 px-6 py-4 glass-surface-subtle rounded-2xl shadow-none">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold text-foreground tracking-tight">
               Q<span className="text-accent text-4xl">.</span>
