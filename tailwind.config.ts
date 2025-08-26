@@ -32,38 +32,38 @@ export default {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))'
 				},
-				destructive: {
-					DEFAULT: 'hsl(var(--destructive))',
-					foreground: 'hsl(var(--destructive-foreground))'
-				},
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',
 					foreground: 'hsl(var(--muted-foreground))'
-				},
-				accent: {
-					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
-				},
-				popover: {
-					DEFAULT: 'hsl(var(--popover))',
-					foreground: 'hsl(var(--popover-foreground))'
 				},
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
+				glass: {
+					primary: 'rgba(255, 255, 255, 0.08)',
+					secondary: 'rgba(0, 0, 0, 0.05)',
+					border: 'rgba(255, 255, 255, 0.2)',
+					'border-dark': 'rgba(0, 0, 0, 0.1)',
+					accent: 'rgba(220, 38, 38, 0.08)',
+					'accent-hover': 'rgba(220, 38, 38, 0.12)'
+				},
+				accent: {
+					red: 'hsl(var(--accent-red))',
+					DEFAULT: 'hsl(var(--accent-red))',
+					foreground: 'hsl(var(--glass-white))'
 				}
 			},
+			fontFamily: {
+				primary: ['SF Pro Display', 'Inter', 'system-ui', 'sans-serif'],
+				inter: ['Inter', 'system-ui', 'sans-serif']
+			},
+			backdropBlur: {
+				xs: '2px',
+				'3xl': '64px'
+			},
 			borderRadius: {
+				'4xl': '2rem',
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
