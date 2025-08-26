@@ -43,6 +43,31 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen">
+      {/* Simple Landing Header */}
+      <header className="sticky top-0 z-50 w-full">
+        <div className="mx-4 mt-4 mb-6 px-6 py-4 glass-surface-strong rounded-2xl">
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold text-foreground tracking-tight">
+              Q<span className="text-accent text-4xl">.</span>
+            </h1>
+            <div className="flex items-center space-x-3">
+              <GlassButton
+                variant="ghost"
+                onClick={() => setShowAuthForm(true)}
+              >
+                Sign In
+              </GlassButton>
+              <GlassButton
+                variant="accent"
+                onClick={() => navigate('/dashboard')}
+              >
+                Get Started
+              </GlassButton>
+            </div>
+          </div>
+        </div>
+      </header>
+      
       <main className="relative">
         {/* Hero Section */}
         <section className="relative px-4 pt-8 pb-16 text-center">
