@@ -57,7 +57,7 @@ const Landing = () => {
         <section className="relative px-4 pt-20 pb-16 text-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-6xl md:text-8xl font-bold mb-6 text-glass bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text">
-              Welcome to Q.
+              Welcome to Q<span className="text-accent">.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Your personal library for collecting, organizing, and rediscovering the quotes that inspire you.
