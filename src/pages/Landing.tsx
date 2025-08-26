@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Header } from "@/components/Header";
 import { GlassCard } from "@/components/GlassCard";
 import { GlassButton } from "@/components/GlassButton";
 import { Users, BookOpen, Heart, Zap, Shield, Sparkles } from "lucide-react";
@@ -44,17 +43,9 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen">
-      <Header 
-        onSearch={() => {}}
-        onAddQuote={() => setShowAuthForm(true)}
-        onSettings={() => setShowAuthForm(true)}
-        viewMode="grid"
-        onViewModeChange={() => {}}
-      />
-      
       <main className="relative">
         {/* Hero Section */}
-        <section className="relative px-4 pt-20 pb-16 text-center">
+        <section className="relative px-4 pt-8 pb-16 text-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-6xl md:text-8xl font-bold mb-6 text-glass bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text">
               Welcome to Q<span className="text-accent">.</span>
