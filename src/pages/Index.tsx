@@ -3,8 +3,7 @@ import { Header } from "@/components/Header";
 import { QuoteCard } from "@/components/QuoteCard";
 import { GlassCard } from "@/components/GlassCard";
 import { GlassButton } from "@/components/GlassButton";
-import { BookOpen, Heart, Tag, TrendingUp, Database, LogIn } from "lucide-react";
-import heroImage from "@/assets/hero-glass.jpg";
+import { BookOpen, Heart, Tag, Database, LogIn } from "lucide-react";
 
 // Sample data - will be replaced with Supabase data
 const sampleQuotes = [
@@ -69,25 +68,19 @@ const Index = () => {
       <main className="container mx-auto px-4 pb-12">
         {/* Hero Section */}
         <section className="mb-12">
-          <GlassCard variant="strong" className="relative overflow-hidden p-8 md:p-12">
-            {/* Background Image */}
-            <div 
-              className="absolute inset-0 bg-cover bg-center opacity-10"
-              style={{ backgroundImage: `url(${heroImage})` }}
-            />
-            
+          <GlassCard variant="strong" className="p-8 md:p-12">
             {/* Content */}
-            <div className="relative z-10 text-center max-w-4xl mx-auto">
+            <div className="text-center max-w-4xl mx-auto">
               <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 tracking-tight">
                 Welcome to Q<span className="text-accent text-6xl md:text-8xl">.</span>
               </h1>
               
-              <p className="text-xl md:text-2xl text-muted-foreground mb-8 font-medium">
+              <p className="text-xl md:text-2xl text-muted-foreground mb-12 font-medium">
                 Your personal library of meaningful quotes, beautifully organized and always accessible
               </p>
               
               {showAuthRequired ? (
-                <GlassCard variant="accent" className="p-6 mb-8 max-w-md mx-auto">
+                <GlassCard variant="accent" className="p-6 mb-12 max-w-md mx-auto">
                   <div className="flex items-center justify-center space-x-3 mb-4">
                     <Database className="h-6 w-6 text-accent-red" />
                     <h3 className="text-lg font-semibold text-foreground">Backend Required</h3>
@@ -101,34 +94,41 @@ const Index = () => {
                   </GlassButton>
                 </GlassCard>
               ) : null}
-
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-                <GlassCard variant="subtle" className="p-4 text-center">
-                  <BookOpen className="h-8 w-8 mx-auto mb-2 text-accent-red" />
-                  <div className="text-2xl font-bold text-foreground">{quotes.length}</div>
-                  <div className="text-sm text-muted-foreground">Quotes</div>
-                </GlassCard>
-                
-                <GlassCard variant="subtle" className="p-4 text-center">
-                  <Heart className="h-8 w-8 mx-auto mb-2 text-accent-red" />
-                  <div className="text-2xl font-bold text-foreground">{quotes.filter(q => q.isFavorite).length}</div>
-                  <div className="text-sm text-muted-foreground">Favorites</div>
-                </GlassCard>
-                
-                <GlassCard variant="subtle" className="p-4 text-center">
-                  <Tag className="h-8 w-8 mx-auto mb-2 text-accent-red" />
-                  <div className="text-2xl font-bold text-foreground">{new Set(quotes.flatMap(q => q.tags)).size}</div>
-                  <div className="text-sm text-muted-foreground">Tags</div>
-                </GlassCard>
-                
-                <GlassCard variant="subtle" className="p-4 text-center">
-                  <TrendingUp className="h-8 w-8 mx-auto mb-2 text-accent-red" />
-                  <div className="text-2xl font-bold text-foreground">0</div>
-                  <div className="text-sm text-muted-foreground">This Week</div>
-                </GlassCard>
-              </div>
             </div>
           </GlassCard>
+
+          {/* Stats Section - Clean Design */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 max-w-4xl mx-auto">
+            <GlassCard variant="default" className="p-8 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="p-3 rounded-2xl bg-accent-red/10">
+                  <BookOpen className="h-8 w-8 text-accent-red" />
+                </div>
+              </div>
+              <div className="text-4xl font-bold text-foreground mb-2">{quotes.length}</div>
+              <div className="text-muted-foreground font-medium">Total Quotes</div>
+            </GlassCard>
+            
+            <GlassCard variant="default" className="p-8 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="p-3 rounded-2xl bg-accent-red/10">
+                  <Tag className="h-8 w-8 text-accent-red" />
+                </div>
+              </div>
+              <div className="text-4xl font-bold text-foreground mb-2">{new Set(quotes.map(q => q.author)).size}</div>
+              <div className="text-muted-foreground font-medium">Authors</div>
+            </GlassCard>
+            
+            <GlassCard variant="default" className="p-8 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="p-3 rounded-2xl bg-accent-red/10">
+                  <Heart className="h-8 w-8 text-accent-red" />
+                </div>
+              </div>
+              <div className="text-4xl font-bold text-foreground mb-2">{quotes.filter(q => q.isFavorite).length}</div>
+              <div className="text-muted-foreground font-medium">Favorites</div>
+            </GlassCard>
+          </div>
         </section>
 
         {/* Quotes Section */}
