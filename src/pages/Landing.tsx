@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { GlassCard } from "@/components/GlassCard";
 import { GlassButton } from "@/components/GlassButton";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Eye, Mail, Layout, BookOpen, Heart, Search } from "lucide-react";
+import { Eye, Mail, Layout, BookOpen, Heart, Search, ChevronDown } from "lucide-react";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -58,6 +58,16 @@ const Landing = () => {
       description: "Find that perfect quote you remembered in seconds with intelligent search"
     }
   ];
+
+  const scrollToFeatures = () => {
+    const featuresSection = document.querySelector('#features-section');
+    if (featuresSection) {
+      featuresSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -158,10 +168,22 @@ const Landing = () => {
                 </GlassButton>
               </div>
             </div>
+            
+            {/* Scroll Indicator */}
+            <div 
+              className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer transition-all duration-500 delay-1100 ${
+                animationPhase === 'complete' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}
+              onClick={scrollToFeatures}
+            >
+              <div className="flex flex-col items-center glass-surface rounded-full p-3 hover:glass-surface-strong transition-all duration-300 group">
+                <ChevronDown className="h-6 w-6 text-muted-foreground group-hover:text-foreground animate-bounce" />
+              </div>
+            </div>
           </section>
 
           {/* Features Grid */}
-          <section className={`px-4 py-16 max-w-6xl mx-auto transition-all duration-500 delay-1000 ${
+          <section id="features-section" className={`px-4 py-16 max-w-6xl mx-auto transition-all duration-500 delay-1000 ${
             animationPhase === 'complete' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}>
             <div className="text-center mb-12">
