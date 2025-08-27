@@ -126,7 +126,7 @@ const Landing = () => {
                 animationPhase === 'complete' ? 'animate-fade-in' : ''
               }`}>
                 <span className={animationPhase === 'transition' ? 'opacity-0' : 'opacity-100 transition-opacity delay-300 duration-500'}>
-                  Welcome to{' '}
+                  Welcome to 
                 </span>
                 <span className={animationPhase === 'transition' ? 'opacity-0' : 'opacity-100 transition-opacity delay-500 duration-500'}>
                   Q<span className="text-accent">.</span>
