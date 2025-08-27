@@ -59,7 +59,7 @@ const Landing = () => {
               </GlassButton>
               <GlassButton
                 variant="accent"
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/auth?mode=signup')}
               >
                 Get Started
               </GlassButton>
@@ -82,7 +82,7 @@ const Landing = () => {
               <GlassButton 
                 variant="accent" 
                 size="lg"
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/auth?mode=signup')}
                 className="text-lg px-8 py-4"
               >
                 Start Your Library
@@ -133,7 +133,7 @@ const Landing = () => {
             <GlassButton 
               variant="accent" 
               size="lg"
-              onClick={() => navigate('/auth')}
+              onClick={() => navigate('/auth?mode=signup')}
               className="text-lg px-8 py-4"
             >
               Get Started Free
