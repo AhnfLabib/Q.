@@ -186,7 +186,7 @@ const Auth = () => {
               {isLogin ? (
                 <>Don't have an account? <span className="text-accent">Sign up</span></>
               ) : (
-                "Already have an account? Sign in"
+                <>Already have an account? <span className="text-accent">Sign in</span></>
               )}
             </button>
           </div>
