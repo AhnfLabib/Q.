@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { GlassButton } from "@/components/GlassButton";
-import { Users, BookOpen, Heart, Zap, Shield, Sparkles } from "lucide-react";
+import { Eye, Mail, Layout, BookOpen, Heart, Search } from "lucide-react";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -10,34 +10,34 @@ const Landing = () => {
 
   const features = [
     {
-      icon: <BookOpen className="h-6 w-6" />,
-      title: "Collect Quotes",
-      description: "Save meaningful quotes from books, articles, and conversations"
+      icon: <Eye className="h-6 w-6" />,
+      title: "Visual Quote Gallery",
+      description: "Transform your quotes into a stunning visual collection that's as beautiful as it is meaningful"
     },
     {
-      icon: <Users className="h-6 w-6" />,
-      title: "Organize by Author",
-      description: "Browse and filter your collection by favorite authors"
+      icon: <Mail className="h-6 w-6" />,
+      title: "Daily Inspiration Delivered",
+      description: "Wake up to carefully curated quotes in your inbox every morning to start your day with inspiration"
+    },
+    {
+      icon: <Layout className="h-6 w-6" />,
+      title: "Smart Visual Organization",
+      description: "See your quotes arranged in beautiful, intuitive layouts that make browsing and rediscovering a joy"
+    },
+    {
+      icon: <BookOpen className="h-6 w-6" />,
+      title: "Collect from Anywhere",
+      description: "Capture meaningful quotes from books, articles, conversations, and social media in seconds"
     },
     {
       icon: <Heart className="h-6 w-6" />,
-      title: "Mark Favorites",
-      description: "Keep track of the quotes that resonate most with you"
+      title: "Personal Favorites",
+      description: "Build your personal collection of the quotes that move you most, beautifully displayed"
     },
     {
-      icon: <Zap className="h-6 w-6" />,
-      title: "Quick Search",
-      description: "Find any quote instantly with our powerful search"
-    },
-    {
-      icon: <Shield className="h-6 w-6" />,
-      title: "Private & Secure",
-      description: "Your personal library is completely private and secure"
-    },
-    {
-      icon: <Sparkles className="h-6 w-6" />,
-      title: "Beautiful Design",
-      description: "Enjoy a clean, minimal interface that lets quotes shine"
+      icon: <Search className="h-6 w-6" />,
+      title: "Instant Quote Discovery",
+      description: "Find that perfect quote you remembered in seconds with intelligent search"
     }
   ];
 
@@ -76,7 +76,7 @@ const Landing = () => {
               Welcome to Q<span className="text-accent">.</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Your personal library for collecting, organizing, and rediscovering the quotes that inspire you.
+              Store your favorite quotes in stunning visual galleries and wake up to daily inspiration in your inbox.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <GlassButton 
@@ -103,10 +103,10 @@ const Landing = () => {
         <section className="px-4 py-16 max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Everything you need to build your quote library
+              Beautiful visual organization meets daily inspiration
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Q. provides all the tools you need to collect, organize, and enjoy your favorite quotes.
+              Store your quotes in stunning visual layouts and receive curated inspiration delivered to your inbox every morning.
             </p>
           </div>
           
