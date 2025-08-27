@@ -11,6 +11,7 @@ import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuotes } from "@/hooks/useQuotes";
 import { Quote, QuoteFormData } from "@/types/database";
+import { triggerNewsletterForUser } from "@/utils/triggerNewsletter";
 
 // Legacy interface for backward compatibility with UI components
 interface LegacyQuote {
@@ -200,7 +201,7 @@ const Dashboard = () => {
           </div>
 
           {/* Add Quote Button */}
-          <div className="max-w-md mx-auto">
+          <div className="max-w-md mx-auto space-y-4">
             <GlassCard 
               variant="default" 
               interactive 
@@ -210,6 +211,32 @@ const Dashboard = () => {
               <div className="text-accent text-2xl mb-2">+</div>
               <div className="text-lg font-semibold mb-1">Add New Quote</div>
               <div className="text-sm text-muted-foreground">Share your favorite quotes</div>
+            </GlassCard>
+
+            {/* Temporary Newsletter Test Button */}
+            <GlassCard 
+              variant="subtle" 
+              interactive 
+              className="p-4 text-center cursor-pointer transition-all duration-200 hover:scale-105 border border-blue-500/20"
+              onClick={async () => {
+                try {
+                  await triggerNewsletterForUser(user?.id);
+                  toast({
+                    title: "Newsletter triggered!",
+                    description: "Check your email for the newsletter."
+                  });
+                } catch (error) {
+                  toast({
+                    title: "Failed to trigger newsletter",
+                    description: "Please try again.",
+                    variant: "destructive"
+                  });
+                }
+              }}
+            >
+              <div className="text-blue-400 text-lg mb-1">📧</div>
+              <div className="text-sm font-semibold mb-1">Test Newsletter</div>
+              <div className="text-xs text-muted-foreground">Send newsletter now</div>
             </GlassCard>
           </div>
 
