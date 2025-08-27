@@ -154,7 +154,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen animate-page-enter">
+    <div className="min-h-screen">
       <Header 
         onSearch={setSearchQuery}
         onAddQuote={handleAddQuote}
@@ -166,18 +166,18 @@ const Dashboard = () => {
       <main className="pt-20 px-4 max-w-7xl mx-auto">
         {/* Welcome Section */}
         <div className="text-center py-12">
-          <h1 className="text-4xl md:text-6xl font-bold mb-8 text-glass bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text animate-slide-up animate-float">
+          <h1 className="text-4xl md:text-6xl font-bold mb-8 text-glass bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text">
             Welcome back, {userName}
           </h1>
           
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-2xl mx-auto mb-8 stagger-children">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-2xl mx-auto mb-8">
             {stats.map((stat, index) => (
               <GlassCard 
                 key={index} 
                 variant="subtle" 
                 interactive 
-                className="p-4 md:p-6 text-center cursor-pointer hover-lift hover-glow"
+                className="p-4 md:p-6 text-center cursor-pointer transition-all duration-200 hover:scale-105"
                 onClick={() => {
                   if (stat.label === "Favorites") {
                     setSearchQuery("favorite:true");
@@ -200,11 +200,11 @@ const Dashboard = () => {
           </div>
 
           {/* Add Quote Button */}
-          <div className="max-w-md mx-auto animate-slide-up" style={{ animationDelay: '0.8s' }}>
+          <div className="max-w-md mx-auto">
             <GlassCard 
               variant="default" 
               interactive 
-              className="p-6 text-center cursor-pointer hover-lift hover-glow border border-accent/20 animate-pulse-glow"
+              className="p-6 text-center cursor-pointer transition-all duration-200 hover:scale-105 border border-accent/20"
               onClick={handleAddQuote}
             >
               <div className="text-accent text-2xl mb-2">+</div>
@@ -239,8 +239,8 @@ const Dashboard = () => {
           ) : (
             <div className={
               viewMode === "grid" 
-                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 stagger-children" 
-                : "space-y-4 stagger-children"
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6" 
+                : "space-y-4"
             }>
               {filteredQuotes.map((quote) => (
                 <QuoteCard 
