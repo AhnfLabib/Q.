@@ -39,8 +39,7 @@ const handler = async (req: Request): Promise<Response> => {
       .select(`
         user_id,
         name,
-        newsletter_frequency,
-        users:user_id (email)
+        newsletter_frequency
       `)
       .neq("newsletter_frequency", "never");
 
@@ -110,12 +109,16 @@ const handler = async (req: Request): Promise<Response> => {
           }
 
           const userName = profile.name || "Reader";
-          const userEmail = profile.users?.email;
-
-          if (!userEmail) {
-            console.error(`No email found for user ${profile.user_id}`);
+          
+          // Get user email from auth.users using service role key
+          const { data: userData, error: userError } = await supabase.auth.admin.getUserById(profile.user_id);
+          
+          if (userError || !userData?.user?.email) {
+            console.error(`No email found for user ${profile.user_id}:`, userError);
             return { success: false, error: "No email found" };
           }
+          
+          const userEmail = userData.user.email;
 
           // Create email content
           const quotesHtml = selectedQuotes.map(quote => `
