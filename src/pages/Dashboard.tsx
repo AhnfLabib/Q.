@@ -203,9 +203,9 @@ const Dashboard = () => {
           {/* Add Quote Button */}
           <div className="max-w-md mx-auto space-y-4">
             <GlassCard 
-              variant="default" 
+              variant="strong" 
               interactive 
-              className="p-6 text-center cursor-pointer transition-all duration-200 hover:scale-105 border border-accent/20"
+              className="p-6 text-center cursor-pointer transition-all duration-200 hover:scale-105 bg-gradient-to-br from-accent/10 to-primary/5 border-2 border-accent/30"
               onClick={handleAddQuote}
             >
               <div className="text-accent text-2xl mb-2">+</div>
