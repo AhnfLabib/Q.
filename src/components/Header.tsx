@@ -44,7 +44,7 @@ export function Header({
                 placeholder="Search quotes, authors, books..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="w-80 pl-10 glass-surface border-glass-border bg-transparent placeholder:text-muted-foreground/60"
+                className="w-80 pl-10 glass-surface border-glass-border bg-transparent placeholder:text-muted-foreground/60 shadow-none"
               />
             </div>
           </div>
@@ -100,7 +100,7 @@ export function Header({
               placeholder="Search quotes..."
               value={searchQuery}
               onChange={handleSearchChange}
-              className="w-full pl-10 glass-surface border-glass-border bg-transparent placeholder:text-muted-foreground/60"
+              className="w-full pl-10 glass-surface border-glass-border bg-transparent placeholder:text-muted-foreground/60 shadow-none"
             />
           </div>
         </div>
