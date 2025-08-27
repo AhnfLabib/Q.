@@ -1,8 +1,11 @@
 import { GlassCard } from "./GlassCard";
 import { GlassButton } from "./GlassButton";
-import { Search, Plus, Settings, Grid3X3, List } from "lucide-react";
+import { Search, Plus, LogOut, Grid3X3, List } from "lucide-react";
 import { useState } from "react";
 import { Input } from "./ui/input";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 interface HeaderProps {
   onSearch?: (query: string) => void;
@@ -20,11 +23,30 @@ export function Header({
   onViewModeChange 
 }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
     onSearch?.(query);
+  };
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (!error) {
+      toast({
+        title: "Signed out",
+        description: "You've been signed out successfully.",
+      });
+      navigate("/");
+    } else {
+      toast({
+        title: "Error signing out",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -81,13 +103,14 @@ export function Header({
               Add Quote
             </GlassButton>
 
-            {/* Settings */}
+            {/* Sign Out */}
             <GlassButton
               variant="ghost"
               size="icon"
-              onClick={onSettings}
+              onClick={handleSignOut}
+              className="glass-interactive"
             >
-              <Settings className="h-4 w-4" />
+              <LogOut className="h-4 w-4" />
             </GlassButton>
           </div>
         </div>

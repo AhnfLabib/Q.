@@ -1,57 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { QuoteCard } from "@/components/QuoteCard";
 import { GlassCard } from "@/components/GlassCard";
 import { QuoteDialog } from "@/components/QuoteDialog";
 import { DeleteConfirmDialog } from "@/components/DeleteConfirmDialog";
-import { BookOpen, Users, Heart } from "lucide-react";
+import { BookOpen, Users, Heart, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuotes } from "@/hooks/useQuotes";
+import { Quote, QuoteFormData } from "@/types/database";
 
-// Sample data - will be replaced with Supabase data
-const sampleQuotes = [
-  {
-    id: "1",
-    text: "The only way to do great work is to love what you do.",
-    author: "Steve Jobs",
-    book: "Stanford Commencement Address",
-    tags: ["motivation", "work", "passion"],
-    favorite: true
-  },
-  {
-    id: "2", 
-    text: "In the middle of difficulty lies opportunity.",
-    author: "Albert Einstein",
-    book: "Attributed",
-    tags: ["opportunity", "challenge", "wisdom"],
-    favorite: false
-  },
-  {
-    id: "3",
-    text: "The future belongs to those who believe in the beauty of their dreams.",
-    author: "Eleanor Roosevelt",
-    book: "Attributed",
-    tags: ["dreams", "future", "belief"],
-    favorite: true
-  },
-  {
-    id: "4",
-    text: "It is during our darkest moments that we must focus to see the light.",
-    author: "Aristotle",
-    book: "Attributed", 
-    tags: ["hope", "perseverance", "wisdom"],
-    favorite: false
-  },
-  {
-    id: "5",
-    text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-    author: "Winston Churchill",
-    book: "Attributed",
-    tags: ["success", "failure", "courage"],
-    favorite: true
-  }
-];
-
-interface Quote {
+// Legacy interface for backward compatibility with UI components
+interface LegacyQuote {
   id: string;
   text: string;
   author: string;
@@ -60,24 +21,44 @@ interface Quote {
   favorite: boolean;
 }
 
+// Convert database Quote to legacy format for UI components
+const convertQuoteToLegacy = (quote: Quote): LegacyQuote => ({
+  id: quote.id,
+  text: quote.quote_text,
+  author: quote.author,
+  book: quote.book,
+  tags: quote.tags,
+  favorite: quote.is_favorite,
+});
+
 const Dashboard = () => {
-  const [quotes, setQuotes] = useState<Quote[]>(sampleQuotes);
+  const navigate = useNavigate();
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
+  const { quotes, loading: quotesLoading, addQuote, updateQuote, deleteQuote, toggleFavorite, incrementShareCount } = useQuotes(user?.id);
+  
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [showAuthRequired, setShowAuthRequired] = useState(false);
-  const [quoteDialog, setQuoteDialog] = useState<{ open: boolean; quote?: Quote | null }>({ open: false });
-  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; quote?: Quote | null }>({ open: false });
+  const [quoteDialog, setQuoteDialog] = useState<{ open: boolean; quote?: LegacyQuote | null }>({ open: false });
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; quote?: LegacyQuote | null }>({ open: false });
 
-  // Placeholder username - will be replaced with actual user data
-  const userName = "Alex";
+  // Redirect to auth if not authenticated
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      navigate("/auth");
+    }
+  }, [authLoading, isAuthenticated, navigate]);
 
-  const filteredQuotes = quotes.filter((quote) => {
+  // Convert quotes to legacy format for UI
+  const legacyQuotes = quotes.map(convertQuoteToLegacy);
+  const userName = user?.user_metadata?.name || user?.email?.split("@")[0] || "User";
+
+  const filteredQuotes = legacyQuotes.filter((quote) => {
     if (searchQuery === "favorite:true") {
       return quote.favorite;
     }
     return quote.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
            quote.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-           quote.book.toLowerCase().includes(searchQuery.toLowerCase()) ||
+           (quote.book?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
            quote.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
   });
 
@@ -85,31 +66,31 @@ const Dashboard = () => {
     setQuoteDialog({ open: true, quote: null });
   };
 
-  const handleEditQuote = (quote: Quote) => {
+  const handleEditQuote = (quote: LegacyQuote) => {
     setQuoteDialog({ open: true, quote });
   };
 
-  const handleDeleteQuote = (quote: Quote) => {
+  const handleDeleteQuote = (quote: LegacyQuote) => {
     setDeleteDialog({ open: true, quote });
   };
 
-  const handleToggleFavorite = (id: string) => {
-    setQuotes(prev => prev.map(quote => 
-      quote.id === id ? { ...quote, favorite: !quote.favorite } : quote
-    ));
-    
-    const quote = quotes.find(q => q.id === id);
-    if (quote) {
-      toast({
-        description: quote.favorite 
-          ? "Quote removed from favorites" 
-          : "Quote added to favorites",
-      });
+  const handleToggleFavorite = async (id: string) => {
+    try {
+      await toggleFavorite(id);
+    } catch (err) {
+      // Error already handled in the hook
     }
   };
 
-  const handleShareQuote = (quote: Quote) => {
+  const handleShareQuote = async (quote: LegacyQuote) => {
     const shareText = `"${quote.text}" — ${quote.author}${quote.book ? ` (${quote.book})` : ''}`;
+    
+    // Increment share count
+    try {
+      await incrementShareCount(quote.id);
+    } catch (err) {
+      // Continue with sharing even if count increment fails
+    }
     
     if (navigator.share) {
       navigator.share({
@@ -124,69 +105,68 @@ const Dashboard = () => {
     }
   };
 
-  const handleQuoteSubmit = (data: Omit<Quote, "id" | "favorite">) => {
-    if (quoteDialog.quote) {
-      // Edit existing quote
-      setQuotes(prev => prev.map(quote => 
-        quote.id === quoteDialog.quote!.id 
-          ? { ...quote, ...data }
-          : quote
-      ));
-      toast({
-        description: "Quote updated successfully!",
-      });
-    } else {
-      // Add new quote
-      const newQuote: Quote = {
-        id: Date.now().toString(),
-        ...data,
-        favorite: false,
-      };
-      setQuotes(prev => [newQuote, ...prev]);
-      toast({
-        description: "Quote added successfully!",
-      });
+  const handleQuoteSubmit = async (data: QuoteFormData) => {
+    try {
+      if (quoteDialog.quote) {
+        // Edit existing quote
+        await updateQuote(quoteDialog.quote.id, data);
+      } else {
+        // Add new quote
+        await addQuote(data);
+      }
+      setQuoteDialog({ open: false, quote: null });
+    } catch (err) {
+      // Error already handled in the hook
     }
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (deleteDialog.quote) {
-      setQuotes(prev => prev.filter(quote => quote.id !== deleteDialog.quote!.id));
-      toast({
-        description: "Quote deleted successfully!",
-      });
-      setDeleteDialog({ open: false });
+      try {
+        await deleteQuote(deleteDialog.quote.id);
+        setDeleteDialog({ open: false, quote: null });
+      } catch (err) {
+        // Error already handled in the hook
+      }
     }
-  };
-
-  const handleAuthAction = () => {
-    setShowAuthRequired(true);
   };
 
   const stats = [
     {
       icon: <BookOpen className="h-5 w-5" />,
       label: "Total Quotes",
-      value: quotes.length
+      value: legacyQuotes.length
     },
     {
       icon: <Users className="h-5 w-5" />,
       label: "Authors",
-      value: new Set(quotes.map(q => q.author)).size
+      value: new Set(legacyQuotes.map(q => q.author)).size
     },
     {
       icon: <Heart className="h-5 w-5" />,
       label: "Favorites",
-      value: quotes.filter(q => q.favorite).length
+      value: legacyQuotes.filter(q => q.favorite).length
     }
   ];
+
+  // Show loading state
+  if (authLoading || quotesLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading your quotes...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
       <Header 
         onSearch={setSearchQuery}
         onAddQuote={handleAddQuote}
-        onSettings={handleAuthAction}
+        onSettings={() => {}}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
       />
@@ -227,13 +207,6 @@ const Dashboard = () => {
             ))}
           </div>
 
-          {showAuthRequired && (
-            <GlassCard variant="accent" className="p-4 mb-8 max-w-2xl mx-auto">
-              <p className="text-sm">
-                🔒 Connect to Supabase to save quotes and enable full functionality
-              </p>
-            </GlassCard>
-          )}
         </div>
 
         {/* Quotes Section */}

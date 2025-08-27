@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { GlassButton } from "@/components/GlassButton";
@@ -6,7 +5,6 @@ import { Eye, Mail, Layout, BookOpen, Heart, Search } from "lucide-react";
 
 const Landing = () => {
   const navigate = useNavigate();
-  const [showAuthForm, setShowAuthForm] = useState(false);
 
   const features = [
     {
@@ -53,13 +51,13 @@ const Landing = () => {
             <div className="flex items-center space-x-3">
               <GlassButton
                 variant="ghost"
-                onClick={() => setShowAuthForm(true)}
+                onClick={() => navigate('/auth')}
               >
                 Sign In
               </GlassButton>
               <GlassButton
                 variant="accent"
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/auth')}
               >
                 Get Started
               </GlassButton>
@@ -82,7 +80,7 @@ const Landing = () => {
               <GlassButton 
                 variant="accent" 
                 size="lg"
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/auth')}
                 className="text-lg px-8 py-4"
               >
                 Start Your Library
@@ -90,7 +88,7 @@ const Landing = () => {
               <GlassButton 
                 variant="ghost" 
                 size="lg"
-                onClick={() => setShowAuthForm(true)}
+                onClick={() => navigate('/auth')}
                 className="text-lg px-8 py-4"
               >
                 Sign In
@@ -133,7 +131,7 @@ const Landing = () => {
             <GlassButton 
               variant="accent" 
               size="lg"
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/auth')}
               className="text-lg px-8 py-4"
             >
               Get Started Free
@@ -141,33 +139,6 @@ const Landing = () => {
           </GlassCard>
         </section>
       </main>
-
-      {showAuthForm && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <GlassCard variant="strong" className="w-full max-w-md p-6">
-            <h3 className="text-2xl font-bold mb-4 text-center">Sign In to Q.</h3>
-            <p className="text-center text-muted-foreground mb-6">
-              Authentication will be integrated with Supabase soon.
-            </p>
-            <div className="flex gap-3">
-              <GlassButton 
-                variant="ghost" 
-                onClick={() => setShowAuthForm(false)}
-                className="flex-1"
-              >
-                Close
-              </GlassButton>
-              <GlassButton 
-                variant="accent"
-                onClick={() => navigate('/dashboard')}
-                className="flex-1"
-              >
-                Continue to Demo
-              </GlassButton>
-            </div>
-          </GlassCard>
-        </div>
-      )}
     </div>
   );
 };

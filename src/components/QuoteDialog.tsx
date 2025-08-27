@@ -23,17 +23,24 @@ import { GlassButton } from "./GlassButton";
 import { Badge } from "./ui/badge";
 import { X } from "lucide-react";
 import { useState } from "react";
+import { QuoteFormData } from "@/types/database";
 
 const quoteSchema = z.object({
-  text: z.string().min(10, "Quote must be at least 10 characters long"),
+  quote_text: z.string().min(10, "Quote must be at least 10 characters long"),
   author: z.string().min(2, "Author name must be at least 2 characters long"),
   book: z.string().optional(),
+  chapter: z.string().optional(),
+  page_number: z.number().optional(),
+  source_url: z.string().url().optional().or(z.literal("")),
   tags: z.array(z.string()).min(1, "At least one tag is required"),
+  difficulty_level: z.number().min(1).max(5).optional(),
+  mood: z.string().optional(),
 });
 
-type QuoteFormData = z.infer<typeof quoteSchema>;
+type FormData = z.infer<typeof quoteSchema>;
 
-interface Quote {
+// Legacy interface for backward compatibility with UI components
+interface LegacyQuote {
   id: string;
   text: string;
   author: string;
@@ -45,26 +52,44 @@ interface Quote {
 interface QuoteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  quote?: Quote | null;
-  onSubmit: (data: Omit<Quote, "id" | "favorite">) => void;
+  quote?: LegacyQuote | null;
+  onSubmit: (data: QuoteFormData) => void;
 }
 
 export function QuoteDialog({ open, onOpenChange, quote, onSubmit }: QuoteDialogProps) {
   const [tagInput, setTagInput] = useState("");
   const isEditing = !!quote;
 
-  const form = useForm<QuoteFormData>({
+  const form = useForm<FormData>({
     resolver: zodResolver(quoteSchema),
     defaultValues: {
-      text: quote?.text || "",
+      quote_text: quote?.text || "",
       author: quote?.author || "",
       book: quote?.book || "",
+      chapter: "",
+      page_number: undefined,
+      source_url: "",
       tags: quote?.tags || [],
+      difficulty_level: 1,
+      mood: "",
     },
   });
 
-  const handleSubmit = (data: QuoteFormData) => {
-    onSubmit(data);
+  const handleSubmit = (data: FormData) => {
+    // Convert form data to QuoteFormData format
+    const quoteData: QuoteFormData = {
+      quote_text: data.quote_text,
+      author: data.author,
+      book: data.book || undefined,
+      chapter: data.chapter || undefined,
+      page_number: data.page_number || undefined,
+      source_url: data.source_url || undefined,
+      tags: data.tags,
+      difficulty_level: data.difficulty_level || 1,
+      mood: data.mood || undefined,
+    };
+    
+    onSubmit(quoteData);
     form.reset();
     setTagInput("");
     onOpenChange(false);
@@ -107,7 +132,7 @@ export function QuoteDialog({ open, onOpenChange, quote, onSubmit }: QuoteDialog
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="text"
+              name="quote_text"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Quote Text</FormLabel>
@@ -154,6 +179,47 @@ export function QuoteDialog({ open, onOpenChange, quote, onSubmit }: QuoteDialog
                         placeholder="Book or source"
                         className="glass-surface-subtle border-glass-border"
                         {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="chapter"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Chapter (Optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Chapter"
+                        className="glass-surface-subtle border-glass-border"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="page_number"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Page Number (Optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Page number"
+                        className="glass-surface-subtle border-glass-border"
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : undefined)}
+                        value={field.value || ""}
                       />
                     </FormControl>
                     <FormMessage />
