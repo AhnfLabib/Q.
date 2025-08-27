@@ -75,7 +75,7 @@ export function Header({
           {/* Actions */}
           <div className="flex items-center space-x-3">
             {/* View Toggle */}
-            <div className="hidden sm:flex items-center space-x-1 p-1 glass-surface-subtle rounded-xl">
+            <div className="hidden sm:flex items-center space-x-1 p-1 bg-muted/20 border border-border/50 rounded-xl">
               <GlassButton
                 variant={viewMode === 'grid' ? 'accent' : 'ghost'}
                 size="icon"
