@@ -106,7 +106,7 @@ const Auth = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2 text-glass bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text">
-            Q.
+            Q<span className="text-accent">.</span>
           </h1>
           <h2 className="text-2xl font-semibold mb-2">
             {isLogin ? "Welcome back" : "Create your account"}
