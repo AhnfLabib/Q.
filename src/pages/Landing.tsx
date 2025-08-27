@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { GlassCard } from "@/components/GlassCard";
 import { GlassButton } from "@/components/GlassButton";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -7,20 +7,22 @@ import { Eye, Mail, Layout, BookOpen, Heart, Search } from "lucide-react";
 
 const Landing = () => {
   const navigate = useNavigate();
-  const [animationPhase, setAnimationPhase] = useState<'splash' | 'morphing' | 'complete'>('splash');
+  const [animationPhase, setAnimationPhase] = useState<'splash' | 'transition' | 'complete'>('splash');
 
   useEffect(() => {
-    const timer1 = setTimeout(() => {
-      setAnimationPhase('morphing');
+    // Phase 1: Show splash for 1 second
+    const splashTimer = setTimeout(() => {
+      setAnimationPhase('transition');
     }, 1000);
 
-    const timer2 = setTimeout(() => {
+    // Phase 2: Complete transition after animation duration
+    const transitionTimer = setTimeout(() => {
       setAnimationPhase('complete');
-    }, 2500);
+    }, 1800);
 
     return () => {
-      clearTimeout(timer1);
-      clearTimeout(timer2);
+      clearTimeout(splashTimer);
+      clearTimeout(transitionTimer);
     };
   }, []);
 
@@ -58,27 +60,38 @@ const Landing = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative overflow-hidden">
       {/* Splash Screen */}
       {animationPhase === 'splash' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
-          <h1 className="text-8xl md:text-9xl font-bold text-foreground tracking-tight">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center glass-surface-subtle">
+          <div className="text-9xl md:text-[12rem] lg:text-[16rem] font-bold text-foreground animate-scale-in">
             Q<span className="text-accent">.</span>
-          </h1>
+          </div>
         </div>
       )}
 
-      {/* Morphing Q */}
-      {animationPhase === 'morphing' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
-          <h1 className="text-8xl md:text-9xl font-bold text-foreground tracking-tight animate-morphToHero">
+      {/* Transitioning Q */}
+      {animationPhase === 'transition' && (
+        <div className="fixed inset-0 z-[99] pointer-events-none">
+          <div 
+            className="absolute text-9xl md:text-[12rem] lg:text-[16rem] font-bold text-foreground transition-all duration-700 ease-out"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: `translate(-50%, -50%) scale(${animationPhase === 'transition' ? '0.4' : '1'})`,
+              animation: 'morphToHero 0.8s ease-out forwards'
+            }}
+          >
             Q<span className="text-accent">.</span>
-          </h1>
+          </div>
         </div>
       )}
 
       {/* Main Content */}
-      <div className={`transition-opacity duration-1000 ${animationPhase === 'complete' ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`transition-opacity duration-500 ${
+        animationPhase === 'splash' ? 'opacity-0' : 
+        animationPhase === 'transition' ? 'opacity-0' : 'opacity-100'
+      }`}>
         {/* Simple Landing Header */}
         <header className="sticky top-0 z-50 w-full">
           <div className="mx-4 mt-4 mb-6 px-6 py-4 glass-surface-subtle rounded-2xl shadow-none">
@@ -109,13 +122,24 @@ const Landing = () => {
           {/* Hero Section */}
           <section className="relative px-4 pt-8 pb-16 text-center">
             <div className="max-w-4xl mx-auto">
-              <h1 className="text-6xl md:text-8xl font-bold mb-6 text-glass bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text">
-                Welcome to Q<span className="text-accent">.</span>
+              <h1 className={`text-6xl md:text-8xl font-bold mb-6 text-glass bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text transition-all duration-500 ${
+                animationPhase === 'complete' ? 'animate-fade-in' : ''
+              }`}>
+                <span className={animationPhase === 'transition' ? 'opacity-0' : 'opacity-100 transition-opacity delay-300 duration-500'}>
+                  Welcome to{' '}
+                </span>
+                <span className={animationPhase === 'transition' ? 'opacity-0' : 'opacity-100 transition-opacity delay-500 duration-500'}>
+                  Q<span className="text-accent">.</span>
+                </span>
               </h1>
-              <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              <p className={`text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto transition-all duration-500 delay-700 ${
+                animationPhase === 'complete' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}>
                 Store your favorite quotes in stunning visual galleries and wake up to daily inspiration in your inbox.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-500 delay-900 ${
+                animationPhase === 'complete' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+              }`}>
                 <GlassButton 
                   variant="accent" 
                   size="lg"
@@ -137,7 +161,9 @@ const Landing = () => {
           </section>
 
           {/* Features Grid */}
-          <section className="px-4 py-16 max-w-6xl mx-auto">
+          <section className={`px-4 py-16 max-w-6xl mx-auto transition-all duration-500 delay-1000 ${
+            animationPhase === 'complete' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}>
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Get daily inspiration delivered to your inbox
@@ -161,7 +187,9 @@ const Landing = () => {
           </section>
 
           {/* CTA Section */}
-          <section className="px-4 py-16 text-center">
+          <section className={`px-4 py-16 text-center transition-all duration-500 delay-1200 ${
+            animationPhase === 'complete' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}>
             <GlassCard variant="strong" className="max-w-2xl mx-auto p-8">
               <h2 className="text-3xl font-bold mb-4">Ready to start collecting?</h2>
               <p className="text-lg text-muted-foreground mb-6">
@@ -179,6 +207,7 @@ const Landing = () => {
           </section>
         </main>
       </div>
+
     </div>
   );
 };
