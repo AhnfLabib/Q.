@@ -118,20 +118,20 @@ const Auth = () => {
 
         <GlassCard className="p-6">
           <form onSubmit={handleAuth} className="space-y-4">
-            {!isLogin && (
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Enter your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required={!isLogin}
-                  className="glass-surface border-glass-border focus:border-accent"
-                />
-              </div>
-            )}
+              {!isLogin && (
+                <div className="space-y-2">
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    placeholder="Enter your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required={!isLogin}
+                    className="pl-8 glass-surface border-glass-border focus:border-accent"
+                  />
+                </div>
+              )}
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
