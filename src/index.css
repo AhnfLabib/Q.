@@ -173,8 +173,14 @@
     left: 1px;
     right: 1px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
     border-radius: inherit;
+    opacity: 0;
+    transition: var(--transition-smooth);
+  }
+  
+  .glass-refraction:hover::after {
+    opacity: 1;
   }
   
   /* Interactive States */
