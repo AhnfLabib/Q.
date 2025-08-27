@@ -104,9 +104,9 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 animate-page-enter">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 animate-slide-down">
           <h1 className="text-6xl font-bold mb-2 text-glass bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text">
             Q<span className="text-accent">.</span>
           </h1>
@@ -118,7 +118,7 @@ const Auth = () => {
           </p>
         </div>
 
-        <GlassCard className="p-6">
+        <GlassCard className="p-6 animate-slide-up hover-glow" style={{ animationDelay: '0.2s' }}>
           <form onSubmit={handleAuth} className="space-y-4">
             {!isLogin && (
               <div className="space-y-2">
