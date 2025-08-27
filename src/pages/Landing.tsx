@@ -140,11 +140,11 @@ const Landing = () => {
                   Welcome to{' '}
                 </span>
                 <span 
-                  className={`relative cursor-pointer transition-all duration-300 hover:scale-105 hover:drop-shadow-[0_0_40px_rgba(220,38,38,0.8)] hover:filter hover:brightness-110 ${
+                  className={`relative cursor-pointer transition-all duration-700 ease-out hover:scale-105 hover:drop-shadow-[0_0_40px_rgba(220,38,38,0.8)] hover:filter hover:brightness-110 ${
                     animationPhase === 'transition' ? 'opacity-0' : 'opacity-100 transition-opacity delay-500 duration-500'
                   }`}
                 >
-                  Q<span className="text-accent hover:drop-shadow-[0_0_50px_rgba(220,38,38,1)] hover:[text-shadow:0_0_30px_rgba(220,38,38,0.8)]">.</span>
+                  Q<span className="text-accent transition-all duration-700 ease-out hover:drop-shadow-[0_0_50px_rgba(220,38,38,1)] hover:[text-shadow:0_0_30px_rgba(220,38,38,0.8)]">.</span>
                 </span>
               </h1>
               <p className={`text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto transition-all duration-500 delay-700 ${
