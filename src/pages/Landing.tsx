@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { GlassCard } from "@/components/GlassCard";
@@ -138,8 +139,12 @@ const Landing = () => {
                 <span className={animationPhase === 'transition' ? 'opacity-0' : 'opacity-100 transition-opacity delay-300 duration-500'}>
                   Welcome to{' '}
                 </span>
-                <span className={animationPhase === 'transition' ? 'opacity-0' : 'opacity-100 transition-opacity delay-500 duration-500'}>
-                  Q<span className="text-accent">.</span>
+                <span 
+                  className={`relative cursor-pointer transition-all duration-300 hover:drop-shadow-[0_0_20px_rgba(220,38,38,0.3)] ${
+                    animationPhase === 'transition' ? 'opacity-0' : 'opacity-100 transition-opacity delay-500 duration-500'
+                  }`}
+                >
+                  Q<span className="text-accent hover:drop-shadow-[0_0_25px_rgba(220,38,38,0.5)]">.</span>
                 </span>
               </h1>
               <p className={`text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto transition-all duration-500 delay-700 ${
