@@ -51,7 +51,7 @@ export function Header({
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full">
+    <header className="w-full">
       <GlassCard variant="strong" className="mx-4 mt-4 mb-6 px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
