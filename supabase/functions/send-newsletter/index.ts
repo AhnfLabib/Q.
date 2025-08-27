@@ -115,37 +115,61 @@ const handler = async (req: Request): Promise<Response> => {
     const results = await Promise.allSettled(
       profiles.map(async (profile: any) => {
         try {
-          // Get user's quotes for personalization
+          // Get 4 random quotes from user's entire library
           const { data: userQuotes, error: quotesError } = await supabase
             .from("quotes")
             .select("*")
             .eq("user_id", profile.user_id)
-            .eq("is_favorite", true)
-            .limit(5);
+            .order("created_at", { ascending: false })
+            .limit(100); // Get more quotes to randomize from
 
-          let selectedQuotes = userQuotes || [];
+          let selectedQuotes = [];
 
-          // If user has no favorites, get random popular quotes
-          if (selectedQuotes.length === 0) {
-            const { data: popularQuotes, error: popularError } = await supabase
+          // Randomize user's quotes and take up to 4
+          if (userQuotes && userQuotes.length > 0) {
+            const shuffled = userQuotes.sort(() => Math.random() - 0.5);
+            selectedQuotes = shuffled.slice(0, 4);
+          }
+
+          // If user has fewer than 4 quotes, supplement with random public quotes
+          if (selectedQuotes.length < 4) {
+            const needed = 4 - selectedQuotes.length;
+            const { data: publicQuotes, error: publicError } = await supabase
               .from("quotes")
               .select("*")
               .eq("is_public", true)
-              .order("view_count", { ascending: false })
-              .limit(3);
+              .limit(50); // Get more to randomize from
 
-            if (!popularError && popularQuotes) {
-              selectedQuotes = popularQuotes;
+            if (!publicError && publicQuotes && publicQuotes.length > 0) {
+              const shuffledPublic = publicQuotes.sort(() => Math.random() - 0.5);
+              selectedQuotes = [...selectedQuotes, ...shuffledPublic.slice(0, needed)];
             }
           }
 
-          // If still no quotes, create a default inspirational quote
+          // If still no quotes, create default inspirational quotes
           if (selectedQuotes.length === 0) {
-            selectedQuotes = [{
-              quote_text: "The only way to do great work is to love what you do.",
-              author: "Steve Jobs",
-              id: "default"
-            }];
+            selectedQuotes = [
+              {
+                quote_text: "The only way to do great work is to love what you do.",
+                author: "Steve Jobs",
+                id: "default-1"
+              },
+              {
+                quote_text: "Life is what happens to you while you're busy making other plans.",
+                author: "John Lennon",
+                id: "default-2"
+              },
+              {
+                quote_text: "The future belongs to those who believe in the beauty of their dreams.",
+                author: "Eleanor Roosevelt",
+                id: "default-3"
+              },
+              {
+                quote_text: "It is during our darkest moments that we must focus to see the light.",
+                author: "Aristotle",
+                id: "default-4"
+              }
+            ];
           }
 
           const userName = profile.name || "Reader";
@@ -160,9 +184,9 @@ const handler = async (req: Request): Promise<Response> => {
           
           const userEmail = userData.user.email;
 
-          // Create email content
+          // Create email content with red theme
           const quotesHtml = selectedQuotes.map(quote => `
-            <div style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-left: 4px solid #6366f1; border-radius: 8px;">
+            <div style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-left: 4px solid #ef4444; border-radius: 8px;">
               <blockquote style="margin: 0; font-size: 18px; font-style: italic; color: #333;">
                 "${quote.quote_text}"
               </blockquote>
@@ -176,7 +200,7 @@ const handler = async (req: Request): Promise<Response> => {
             <div style="max-width: 600px; margin: 0 auto; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
               <div style="text-align: center; padding: 40px 20px;">
                 <h1 style="font-size: 48px; font-weight: bold; margin: 0; color: #333;">
-                  Q<span style="color: #6366f1;">.</span>
+                  Q<span style="color: #ef4444;">.</span>
                 </h1>
                 <p style="color: #666; margin: 10px 0 30px;">Your Daily Inspiration</p>
               </div>
@@ -187,14 +211,14 @@ const handler = async (req: Request): Promise<Response> => {
                 </h2>
                 
                 <p style="color: #666; line-height: 1.6; margin-bottom: 30px;">
-                  Here are some inspiring quotes to brighten your day. These are ${selectedQuotes.length > 1 && userQuotes && userQuotes.length > 0 ? 'selected from your personal favorites' : 'carefully curated'} just for you.
+                  Here are 4 random quotes ${userQuotes && userQuotes.length > 0 ? 'from your personal library' : 'carefully curated'} to brighten your day.
                 </p>
                 
                 ${quotesHtml}
                 
                 <div style="margin: 40px 0; text-align: center;">
-                  <a href="${Deno.env.get("SUPABASE_URL")?.replace('https://', 'https://') || 'https://app.example.com'}/dashboard" 
-                     style="display: inline-block; background: #6366f1; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500;">
+                  <a href="https://lovable.dev/projects/your-project-id/dashboard" 
+                     style="display: inline-block; background: #ef4444; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 500;">
                     View Your Quote Library
                   </a>
                 </div>
@@ -203,7 +227,7 @@ const handler = async (req: Request): Promise<Response> => {
                   <p style="color: #999; font-size: 12px; margin: 0;">
                     You're receiving this because you're subscribed to ${profile.newsletter_frequency} newsletters from Q.
                     <br>
-                    <a href="${Deno.env.get("SUPABASE_URL")?.replace('https://', 'https://') || 'https://app.example.com'}/settings" style="color: #6366f1;">Update your preferences</a>
+                    <a href="https://lovable.dev/projects/your-project-id/settings" style="color: #ef4444;">Update your preferences</a>
                   </p>
                 </div>
               </div>
