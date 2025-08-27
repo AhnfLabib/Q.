@@ -27,7 +27,15 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Environment variables check:");
     console.log("SUPABASE_URL:", supabaseUrl ? "✓ Present" : "✗ Missing");
     console.log("SUPABASE_SERVICE_ROLE_KEY:", supabaseServiceKey ? "✓ Present" : "✗ Missing");
-    console.log("RESEND_API_KEY:", resendApiKey ? "✓ Present" : "✗ Missing");
+    console.log("RESEND_API_KEY:", resendApiKey ? `✓ Present (${resendApiKey.substring(0, 6)}...)` : "✗ Missing");
+    
+    // Log all available environment variables for debugging
+    console.log("All environment variables:");
+    for (const [key, value] of Object.entries(Deno.env.toObject())) {
+      if (key.includes('RESEND') || key.includes('SUPABASE')) {
+        console.log(`${key}: ${value ? `${value.substring(0, 6)}...` : 'undefined'}`);
+      }
+    }
 
     if (!supabaseUrl || !supabaseServiceKey) {
       throw new Error("Missing required Supabase environment variables");
@@ -37,11 +45,37 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Missing RESEND_API_KEY environment variable");
     }
 
+    // Validate API key format (Resend keys start with 're_')
+    if (!resendApiKey.startsWith('re_')) {
+      throw new Error(`Invalid RESEND_API_KEY format. Expected format: 're_...', got: ${resendApiKey.substring(0, 6)}...`);
+    }
+
+    console.log("✓ API key format validation passed");
+
     // Initialize Supabase client
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
-    // Initialize Resend client
-    const resend = new Resend(resendApiKey);
+    // Initialize Resend client with validation
+    let resend: any;
+    try {
+      resend = new Resend(resendApiKey);
+      console.log("✓ Resend client initialized successfully");
+    } catch (resendError: any) {
+      console.error("✗ Failed to initialize Resend client:", resendError);
+      throw new Error(`Resend initialization failed: ${resendError.message}`);
+    }
+
+    // Test API key validity with a simple domain check
+    try {
+      console.log("Testing Resend API key validity...");
+      // This will test the API key without actually sending an email
+      const domainTest = await resend.domains.list();
+      console.log("✓ Resend API key is valid and working");
+    } catch (testError: any) {
+      console.error("✗ Resend API key test failed:", testError);
+      // Don't fail the entire function, just log the warning
+      console.warn("API key test failed, but continuing with newsletter sending...");
+    }
 
     let body: NewsletterRequest = {};
     if (req.method === "POST") {
