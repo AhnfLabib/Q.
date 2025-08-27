@@ -5,6 +5,7 @@ import { QuoteCard } from "@/components/QuoteCard";
 import { GlassCard } from "@/components/GlassCard";
 import { QuoteDialog } from "@/components/QuoteDialog";
 import { DeleteConfirmDialog } from "@/components/DeleteConfirmDialog";
+import QuoteShareDialog from "@/components/QuoteShareDialog";
 import { BookOpen, Users, Heart, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -40,6 +41,7 @@ const Dashboard = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [quoteDialog, setQuoteDialog] = useState<{ open: boolean; quote?: LegacyQuote | null }>({ open: false });
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; quote?: LegacyQuote | null }>({ open: false });
+  const [shareDialog, setShareDialog] = useState<{ open: boolean; quote?: LegacyQuote | null }>({ open: false });
 
   // Redirect to auth if not authenticated
   useEffect(() => {
@@ -84,8 +86,6 @@ const Dashboard = () => {
   };
 
   const handleShareQuote = async (quote: LegacyQuote) => {
-    const shareText = `"${quote.text}" — ${quote.author}${quote.book ? ` (${quote.book})` : ''}`;
-    
     // Increment share count
     try {
       await incrementShareCount(quote.id);
@@ -93,17 +93,8 @@ const Dashboard = () => {
       // Continue with sharing even if count increment fails
     }
     
-    if (navigator.share) {
-      navigator.share({
-        title: 'Quote',
-        text: shareText,
-      });
-    } else {
-      navigator.clipboard.writeText(shareText);
-      toast({
-        description: "Quote copied to clipboard!",
-      });
-    }
+    // Open the visual share dialog
+    setShareDialog({ open: true, quote });
   };
 
   const handleQuoteSubmit = async (data: QuoteFormData) => {
@@ -280,6 +271,12 @@ const Dashboard = () => {
         onOpenChange={(open) => setDeleteDialog({ open })}
         onConfirm={confirmDelete}
         quoteText={deleteDialog.quote?.text || ""}
+      />
+
+      <QuoteShareDialog
+        open={shareDialog.open}
+        onOpenChange={(open) => setShareDialog({ open, quote: null })}
+        quote={shareDialog.quote}
       />
     </div>
   );

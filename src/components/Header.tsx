@@ -1,11 +1,12 @@
 import { GlassCard } from "./GlassCard";
 import { GlassButton } from "./GlassButton";
-import { Search, Plus, LogOut, Grid3X3, List } from "lucide-react";
+import { Search, Plus, LogOut, Grid3X3, List, Settings } from "lucide-react";
 import { useState } from "react";
 import { Input } from "./ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface HeaderProps {
   onSearch?: (query: string) => void;
@@ -101,6 +102,19 @@ export function Header({
             >
               <Plus className="mr-2 h-4 w-4" />
               Add Quote
+            </GlassButton>
+
+            {/* Theme Toggle */}
+            <ThemeToggle />
+
+            {/* Settings */}
+            <GlassButton
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/settings")}
+              className="glass-interactive"
+            >
+              <Settings className="h-4 w-4" />
             </GlassButton>
 
             {/* Sign Out */}
