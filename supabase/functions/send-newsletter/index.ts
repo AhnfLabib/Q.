@@ -212,7 +212,7 @@ const handler = async (req: Request): Promise<Response> => {
 
           // Send email using Brevo
           const sendSmtpEmail = new brevo.SendSmtpEmail();
-          sendSmtpEmail.sender = { name: "Q. Daily Inspiration", email: "noreply@brevo.com" };
+          sendSmtpEmail.sender = { name: "Q. Daily Inspiration", email: "yommslrb@gmail.com" };
           sendSmtpEmail.to = [{ email: userEmail, name: userName }];
           sendSmtpEmail.subject = `Your ${profile.newsletter_frequency} inspiration from Q.`;
           sendSmtpEmail.htmlContent = emailHtml;
