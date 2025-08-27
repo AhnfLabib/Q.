@@ -9,7 +9,7 @@ interface Quote {
   author: string;
   book?: string;
   tags: string[];
-  isFavorite?: boolean;
+  favorite: boolean;
 }
 
 interface QuoteCardProps {
@@ -17,7 +17,7 @@ interface QuoteCardProps {
   onFavorite?: (id: string) => void;
   onShare?: (quote: Quote) => void;
   onEdit?: (quote: Quote) => void;
-  onDelete?: (id: string) => void;
+  onDelete?: (quote: Quote) => void;
   viewMode?: 'grid' | 'list';
 }
 
@@ -33,7 +33,7 @@ export function QuoteCard({
 
   return (
     <GlassCard 
-      variant={quote.isFavorite ? "accent" : "default"}
+      variant={quote.favorite ? "accent" : "default"}
       interactive
       refraction
       className={`group p-6 h-full ${isGridView ? 'min-h-[280px]' : 'min-h-[200px]'} flex flex-col`}
@@ -51,7 +51,7 @@ export function QuoteCard({
           <cite className="text-muted-foreground font-medium not-italic">
             — {quote.author}
           </cite>
-          {quote.isFavorite && (
+        {quote.favorite && (
             <Heart className="h-4 w-4 text-accent-red fill-current" />
           )}
         </div>
@@ -96,7 +96,7 @@ export function QuoteCard({
             onClick={() => onFavorite?.(quote.id)}
             className="h-8 w-8"
           >
-            <Heart className={`h-4 w-4 ${quote.isFavorite ? 'text-accent-red fill-current' : ''}`} />
+            <Heart className={`h-4 w-4 ${quote.favorite ? 'text-accent-red fill-current' : ''}`} />
           </GlassButton>
           
           <GlassButton
@@ -122,7 +122,7 @@ export function QuoteCard({
           <GlassButton
             variant="ghost"
             size="icon"
-            onClick={() => onDelete?.(quote.id)}
+            onClick={() => onDelete?.(quote)}
             className="h-8 w-8 hover:text-red-500"
           >
             <Trash2 className="h-4 w-4" />

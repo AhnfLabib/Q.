@@ -2,7 +2,10 @@ import { useState } from "react";
 import { Header } from "@/components/Header";
 import { QuoteCard } from "@/components/QuoteCard";
 import { GlassCard } from "@/components/GlassCard";
+import { QuoteDialog } from "@/components/QuoteDialog";
+import { DeleteConfirmDialog } from "@/components/DeleteConfirmDialog";
 import { BookOpen, Users, Heart } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 // Sample data - will be replaced with Supabase data
 const sampleQuotes = [
@@ -48,11 +51,22 @@ const sampleQuotes = [
   }
 ];
 
+interface Quote {
+  id: string;
+  text: string;
+  author: string;
+  book?: string;
+  tags: string[];
+  favorite: boolean;
+}
+
 const Dashboard = () => {
-  const [quotes] = useState(sampleQuotes);
+  const [quotes, setQuotes] = useState<Quote[]>(sampleQuotes);
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showAuthRequired, setShowAuthRequired] = useState(false);
+  const [quoteDialog, setQuoteDialog] = useState<{ open: boolean; quote?: Quote | null }>({ open: false });
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; quote?: Quote | null }>({ open: false });
 
   // Placeholder username - will be replaced with actual user data
   const userName = "Alex";
@@ -68,7 +82,81 @@ const Dashboard = () => {
   });
 
   const handleAddQuote = () => {
-    setShowAuthRequired(true);
+    setQuoteDialog({ open: true, quote: null });
+  };
+
+  const handleEditQuote = (quote: Quote) => {
+    setQuoteDialog({ open: true, quote });
+  };
+
+  const handleDeleteQuote = (quote: Quote) => {
+    setDeleteDialog({ open: true, quote });
+  };
+
+  const handleToggleFavorite = (id: string) => {
+    setQuotes(prev => prev.map(quote => 
+      quote.id === id ? { ...quote, favorite: !quote.favorite } : quote
+    ));
+    
+    const quote = quotes.find(q => q.id === id);
+    if (quote) {
+      toast({
+        description: quote.favorite 
+          ? "Quote removed from favorites" 
+          : "Quote added to favorites",
+      });
+    }
+  };
+
+  const handleShareQuote = (quote: Quote) => {
+    const shareText = `"${quote.text}" — ${quote.author}${quote.book ? ` (${quote.book})` : ''}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'Quote',
+        text: shareText,
+      });
+    } else {
+      navigator.clipboard.writeText(shareText);
+      toast({
+        description: "Quote copied to clipboard!",
+      });
+    }
+  };
+
+  const handleQuoteSubmit = (data: Omit<Quote, "id" | "favorite">) => {
+    if (quoteDialog.quote) {
+      // Edit existing quote
+      setQuotes(prev => prev.map(quote => 
+        quote.id === quoteDialog.quote!.id 
+          ? { ...quote, ...data }
+          : quote
+      ));
+      toast({
+        description: "Quote updated successfully!",
+      });
+    } else {
+      // Add new quote
+      const newQuote: Quote = {
+        id: Date.now().toString(),
+        ...data,
+        favorite: false,
+      };
+      setQuotes(prev => [newQuote, ...prev]);
+      toast({
+        description: "Quote added successfully!",
+      });
+    }
+  };
+
+  const confirmDelete = () => {
+    if (deleteDialog.quote) {
+      setQuotes(prev => prev.filter(quote => quote.id !== deleteDialog.quote!.id));
+      toast({
+        description: "Quote deleted successfully!",
+      });
+      setDeleteDialog({ open: false });
+    }
   };
 
   const handleAuthAction = () => {
@@ -180,12 +268,31 @@ const Dashboard = () => {
                   key={quote.id} 
                   quote={quote} 
                   viewMode={viewMode}
+                  onFavorite={handleToggleFavorite}
+                  onShare={handleShareQuote}
+                  onEdit={handleEditQuote}
+                  onDelete={handleDeleteQuote}
                 />
               ))}
             </div>
           )}
         </div>
       </main>
+
+      {/* Dialogs */}
+      <QuoteDialog
+        open={quoteDialog.open}
+        onOpenChange={(open) => setQuoteDialog({ open, quote: null })}
+        quote={quoteDialog.quote}
+        onSubmit={handleQuoteSubmit}
+      />
+
+      <DeleteConfirmDialog
+        open={deleteDialog.open}
+        onOpenChange={(open) => setDeleteDialog({ open })}
+        onConfirm={confirmDelete}
+        quoteText={deleteDialog.quote?.text || ""}
+      />
     </div>
   );
 };
