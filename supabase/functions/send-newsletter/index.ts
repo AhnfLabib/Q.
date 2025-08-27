@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import { Resend } from "npm:resend@2.0.0";
+import * as brevo from "npm:@getbrevo/brevo@2.5.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -25,17 +25,17 @@ const handler = async (req: Request): Promise<Response> => {
     // Validate environment variables
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    const brevoApiKey = Deno.env.get("BREVO_API_KEY");
 
     console.log("Environment variables check:");
     console.log("SUPABASE_URL:", supabaseUrl ? "✓ Present" : "✗ Missing");
     console.log("SUPABASE_SERVICE_ROLE_KEY:", supabaseServiceKey ? "✓ Present" : "✗ Missing");
-    console.log("RESEND_API_KEY:", resendApiKey ? `✓ Present (${resendApiKey.substring(0, 6)}...)` : "✗ Missing");
+    console.log("BREVO_API_KEY:", brevoApiKey ? `✓ Present (${brevoApiKey.substring(0, 6)}...)` : "✗ Missing");
     
     // Log all available environment variables for debugging
     console.log("All environment variables:");
     for (const [key, value] of Object.entries(Deno.env.toObject())) {
-      if (key.includes('RESEND') || key.includes('SUPABASE')) {
+      if (key.includes('BREVO') || key.includes('SUPABASE')) {
         console.log(`${key}: ${value ? `${value.substring(0, 6)}...` : 'undefined'}`);
       }
     }
@@ -44,41 +44,27 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Missing required Supabase environment variables");
     }
 
-    if (!resendApiKey) {
-      throw new Error("Missing RESEND_API_KEY environment variable");
+    if (!brevoApiKey) {
+      throw new Error("Missing BREVO_API_KEY environment variable");
     }
 
-    // Validate API key format (Resend keys start with 're_')
-    if (!resendApiKey.startsWith('re_')) {
-      throw new Error(`Invalid RESEND_API_KEY format. Expected format: 're_...', got: ${resendApiKey.substring(0, 6)}...`);
-    }
-
-    console.log("✓ API key format validation passed");
+    console.log("✓ API key validation passed");
 
     // Initialize Supabase client
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
-    // Initialize Resend client with validation
-    let resend: any;
+    // Initialize Brevo client
+    let brevoApi: brevo.TransactionalEmailsApi;
     try {
-      resend = new Resend(resendApiKey);
-      console.log("✓ Resend client initialized successfully");
-    } catch (resendError: any) {
-      console.error("✗ Failed to initialize Resend client:", resendError);
-      throw new Error(`Resend initialization failed: ${resendError.message}`);
+      brevoApi = new brevo.TransactionalEmailsApi();
+      brevoApi.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, brevoApiKey);
+      console.log("✓ Brevo client initialized successfully");
+    } catch (brevoError: any) {
+      console.error("✗ Failed to initialize Brevo client:", brevoError);
+      throw new Error(`Brevo initialization failed: ${brevoError.message}`);
     }
 
-    // Test API key validity with a simple domain check
-    try {
-      console.log("Testing Resend API key validity...");
-      // This will test the API key without actually sending an email
-      const domainTest = await resend.domains.list();
-      console.log("✓ Resend API key is valid and working");
-    } catch (testError: any) {
-      console.error("✗ Resend API key test failed:", testError);
-      // Don't fail the entire function, just log the warning
-      console.warn("API key test failed, but continuing with newsletter sending...");
-    }
+    console.log("✓ Brevo API key configured and ready");
 
     let body: NewsletterRequest = {};
     if (req.method === "POST") {
@@ -224,13 +210,14 @@ const handler = async (req: Request): Promise<Response> => {
             </div>
           `;
 
-          // Send email
-          const emailResponse = await resend.emails.send({
-            from: "Q. Daily Inspiration <inspiration@resend.dev>",
-            to: [userEmail],
-            subject: `Your ${profile.newsletter_frequency} inspiration from Q.`,
-            html: emailHtml,
-          });
+          // Send email using Brevo
+          const sendSmtpEmail = new brevo.SendSmtpEmail();
+          sendSmtpEmail.sender = { name: "Q. Daily Inspiration", email: "noreply@brevo.com" };
+          sendSmtpEmail.to = [{ email: userEmail, name: userName }];
+          sendSmtpEmail.subject = `Your ${profile.newsletter_frequency} inspiration from Q.`;
+          sendSmtpEmail.htmlContent = emailHtml;
+          
+          const emailResponse = await brevoApi.sendTransacEmail(sendSmtpEmail);
 
           // Log the newsletter send
           const { error: logError } = await supabase
@@ -240,7 +227,7 @@ const handler = async (req: Request): Promise<Response> => {
               frequency: profile.newsletter_frequency,
               content: {
                 quotes: selectedQuotes.map(q => ({ id: q.id, quote_text: q.quote_text, author: q.author })),
-                email_id: emailResponse.data?.id
+                email_id: emailResponse.messageId
               },
               status: "sent"
             });
@@ -250,7 +237,7 @@ const handler = async (req: Request): Promise<Response> => {
           }
 
           console.log(`Newsletter sent to ${userEmail}`);
-          return { success: true, email: userEmail, emailId: emailResponse.data?.id };
+          return { success: true, email: userEmail, emailId: emailResponse.messageId };
         } catch (error: any) {
           console.error(`Error sending newsletter to user ${profile.user_id}:`, error);
           
