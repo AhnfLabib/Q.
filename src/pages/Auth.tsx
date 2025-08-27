@@ -187,7 +187,11 @@ const Auth = () => {
               onClick={() => setIsLogin(!isLogin)}
               className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+              {isLogin ? (
+                <>Don't have an account? <span className="text-accent">Sign up</span></>
+              ) : (
+                "Already have an account? Sign in"
+              )}
             </button>
           </div>
         </GlassCard>
