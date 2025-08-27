@@ -50,7 +50,8 @@ const Dashboard = () => {
 
   // Convert quotes to legacy format for UI
   const legacyQuotes = quotes.map(convertQuoteToLegacy);
-  const userName = user?.user_metadata?.name || user?.email?.split("@")[0] || "User";
+  const fullName = user?.user_metadata?.name || user?.email?.split("@")[0] || "User";
+  const userName = fullName.split(" ")[0]; // Extract first name only
 
   const filteredQuotes = legacyQuotes.filter((quote) => {
     if (searchQuery === "favorite:true") {
@@ -205,6 +206,20 @@ const Dashboard = () => {
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
               </GlassCard>
             ))}
+          </div>
+
+          {/* Add Quote Button */}
+          <div className="max-w-md mx-auto">
+            <GlassCard 
+              variant="default" 
+              interactive 
+              className="p-6 text-center cursor-pointer transition-all duration-200 hover:scale-105 border border-accent/20"
+              onClick={handleAddQuote}
+            >
+              <div className="text-accent text-2xl mb-2">+</div>
+              <div className="text-lg font-semibold mb-1">Add New Quote</div>
+              <div className="text-sm text-muted-foreground">Share your favorite quotes</div>
+            </GlassCard>
           </div>
 
         </div>
