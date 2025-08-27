@@ -14,6 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      authors: {
+        Row: {
+          bio: string | null
+          birth_year: number | null
+          created_at: string
+          created_by: string | null
+          death_year: number | null
+          id: string
+          image_url: string | null
+          name: string
+          nationality: string | null
+          updated_at: string
+        }
+        Insert: {
+          bio?: string | null
+          birth_year?: number | null
+          created_at?: string
+          created_by?: string | null
+          death_year?: number | null
+          id?: string
+          image_url?: string | null
+          name: string
+          nationality?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bio?: string | null
+          birth_year?: number | null
+          created_at?: string
+          created_by?: string | null
+          death_year?: number | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          nationality?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       newsletter_logs: {
         Row: {
           content: Json | null
@@ -68,39 +137,156 @@ export type Database = {
         }
         Relationships: []
       }
+      quote_tags: {
+        Row: {
+          created_at: string
+          id: string
+          quote_id: string
+          tag_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          quote_id: string
+          tag_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          quote_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_quote_tags_quote_id"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quote_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quotes: {
         Row: {
           author: string
+          author_id: string | null
           book: string | null
+          category_id: string | null
+          chapter: string | null
           created_at: string
+          difficulty_level: number | null
           id: string
           is_favorite: boolean | null
+          is_public: boolean | null
+          mood: string | null
+          page_number: number | null
           quote_text: string
+          reading_time_seconds: number | null
+          share_count: number | null
+          source_url: string | null
           tags: string[] | null
           updated_at: string
           user_id: string
+          view_count: number | null
+          word_count: number | null
         }
         Insert: {
           author: string
+          author_id?: string | null
           book?: string | null
+          category_id?: string | null
+          chapter?: string | null
           created_at?: string
+          difficulty_level?: number | null
           id?: string
           is_favorite?: boolean | null
+          is_public?: boolean | null
+          mood?: string | null
+          page_number?: number | null
           quote_text: string
+          reading_time_seconds?: number | null
+          share_count?: number | null
+          source_url?: string | null
           tags?: string[] | null
           updated_at?: string
           user_id: string
+          view_count?: number | null
+          word_count?: number | null
         }
         Update: {
           author?: string
+          author_id?: string | null
           book?: string | null
+          category_id?: string | null
+          chapter?: string | null
           created_at?: string
+          difficulty_level?: number | null
           id?: string
           is_favorite?: boolean | null
+          is_public?: boolean | null
+          mood?: string | null
+          page_number?: number | null
           quote_text?: string
+          reading_time_seconds?: number | null
+          share_count?: number | null
+          source_url?: string | null
           tags?: string[] | null
           updated_at?: string
           user_id?: string
+          view_count?: number | null
+          word_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotes_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "authors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quotes_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tags: {
+        Row: {
+          color: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          updated_at: string
+          usage_count: number | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+          usage_count?: number | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+          usage_count?: number | null
         }
         Relationships: []
       }
