@@ -22,7 +22,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { GlassButton } from "./GlassButton";
 import { Badge } from "./ui/badge";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { QuoteFormData } from "@/types/database";
 
 const quoteSchema = z.object({
@@ -63,17 +63,35 @@ export function QuoteDialog({ open, onOpenChange, quote, onSubmit }: QuoteDialog
   const form = useForm<FormData>({
     resolver: zodResolver(quoteSchema),
     defaultValues: {
-      quote_text: quote?.text || "",
-      author: quote?.author || "",
-      book: quote?.book || "",
+      quote_text: "",
+      author: "",
+      book: "",
       chapter: "",
       page_number: undefined,
       source_url: "",
-      tags: quote?.tags || [],
+      tags: [],
       difficulty_level: 1,
       mood: "",
     },
   });
+
+  // Reset form when quote changes (for editing)
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        quote_text: quote?.text || "",
+        author: quote?.author || "",
+        book: quote?.book || "",
+        chapter: "",
+        page_number: undefined,
+        source_url: "",
+        tags: quote?.tags || [],
+        difficulty_level: 1,
+        mood: "",
+      });
+      setTagInput("");
+    }
+  }, [open, quote, form]);
 
   const handleSubmit = (data: FormData) => {
     // Convert form data to QuoteFormData format
