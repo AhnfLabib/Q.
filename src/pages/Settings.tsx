@@ -5,7 +5,8 @@ import { GlassCard } from "@/components/GlassCard";
 import { GlassButton } from "@/components/GlassButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, User, Mail, Lock, Save } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ArrowLeft, User, Mail, Lock, Save, Bell } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -19,6 +20,7 @@ const Settings = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [newsletterFrequency, setNewsletterFrequency] = useState("weekly");
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -30,8 +32,32 @@ const Settings = () => {
     if (user) {
       setDisplayName(user.user_metadata?.name || "");
       setEmail(user.email || "");
+      fetchProfile();
     }
   }, [user]);
+
+  const fetchProfile = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("newsletter_frequency")
+        .eq("user_id", user.id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') { // Ignore "not found" errors
+        console.error("Error fetching profile:", error);
+        return;
+      }
+
+      if (data) {
+        setNewsletterFrequency(data.newsletter_frequency || "weekly");
+      }
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    }
+  };
 
   const updateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,6 +160,41 @@ const Settings = () => {
     }
   };
 
+  const updateNewsletterPreferences = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .upsert(
+          {
+            user_id: user?.id,
+            name: displayName,
+            newsletter_frequency: newsletterFrequency,
+          },
+          {
+            onConflict: "user_id"
+          }
+        );
+
+      if (error) throw error;
+
+      toast({
+        title: "Newsletter preferences updated",
+        description: "Your newsletter preferences have been saved.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error updating preferences",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -222,6 +283,45 @@ const Settings = () => {
             >
               <Save className="mr-2 h-4 w-4" />
               Update Email
+            </GlassButton>
+          </form>
+        </GlassCard>
+
+        {/* Newsletter Settings */}
+        <GlassCard className="mb-8 p-6">
+          <div className="flex items-center space-x-3 mb-6">
+            <Bell className="h-5 w-5 text-accent" />
+            <h2 className="text-xl font-semibold">Newsletter Preferences</h2>
+          </div>
+          
+          <form onSubmit={updateNewsletterPreferences} className="space-y-4">
+            <div>
+              <Label htmlFor="newsletterFrequency">Newsletter Frequency</Label>
+              <Select value={newsletterFrequency} onValueChange={setNewsletterFrequency}>
+                <SelectTrigger className="mt-1 glass-surface border-glass-border bg-transparent">
+                  <SelectValue placeholder="Select frequency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="daily">Daily - Every morning</SelectItem>
+                  <SelectItem value="weekly">Weekly - Every Monday</SelectItem>
+                  <SelectItem value="monthly">Monthly - First of the month</SelectItem>
+                  <SelectItem value="never">Paused - No newsletters</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-sm text-muted-foreground mt-2">
+                Get inspiring quotes from your library delivered to your inbox. 
+                Your personal favorites will be prioritized in your newsletters.
+              </p>
+            </div>
+            
+            <GlassButton 
+              type="submit" 
+              variant="accent" 
+              disabled={loading}
+              className="w-full"
+            >
+              <Save className="mr-2 h-4 w-4" />
+              Update Newsletter Preferences
             </GlassButton>
           </form>
         </GlassCard>
