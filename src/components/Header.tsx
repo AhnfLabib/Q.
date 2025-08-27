@@ -52,7 +52,7 @@ export function Header({
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 w-full">
-      <GlassCard variant="strong" className="mx-4 mt-4 mb-6 px-6 py-4">
+      <GlassCard variant="strong" className="mx-4 mt-4 mb-6 px-6 py-4 shadow-sm">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-6">
