@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { GlassButton } from "@/components/GlassButton";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Eye, Mail, Layout, BookOpen, Heart, Search } from "lucide-react";
 
 const Landing = () => {
@@ -49,6 +50,7 @@ const Landing = () => {
               Q<span className="text-accent text-4xl">.</span>
             </h1>
             <div className="flex items-center space-x-3">
+              <ThemeToggle />
               <GlassButton
                 variant="ghost"
                 onClick={() => navigate('/auth')}
