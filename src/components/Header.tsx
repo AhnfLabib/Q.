@@ -51,8 +51,8 @@ export function Header({
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full backdrop-blur-xl">
-      <GlassCard variant="strong" className="mx-4 mt-4 mb-6 px-6 py-4 backdrop-blur-xl bg-background/80 border border-border/20">
+    <header className="sticky top-0 z-50 w-full">
+      <GlassCard variant="strong" className="mx-4 mt-4 mb-6 px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-6">
