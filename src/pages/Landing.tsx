@@ -135,7 +135,7 @@ const Landing = () => {
               <p className={`text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto transition-all duration-500 delay-700 ${
                 animationPhase === 'complete' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}>
-                Collect quotes beautifully. Get daily inspiration.
+                Turn scattered wisdom into visual stories. Wake up inspired every morning.
               </p>
               <div className={`flex flex-col sm:flex-row gap-4 justify-center transition-all duration-500 delay-900 ${
                 animationPhase === 'complete' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
