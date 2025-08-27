@@ -19,28 +19,46 @@ const handler = async (req: Request): Promise<Response> => {
     );
 
     const url = new URL(req.url);
-    const frequency = url.searchParams.get("frequency") || "daily";
+    const requestedFrequency = url.searchParams.get("frequency");
+    
+    // If no frequency specified, send to all users regardless of frequency
+    const frequencies = requestedFrequency ? [requestedFrequency] : ["daily", "weekly"];
+    
+    console.log(`Newsletter scheduler triggered for frequencies: ${frequencies.join(", ")}`);
 
-    console.log(`Newsletter scheduler triggered for ${frequency} newsletters`);
+    const results = [];
 
-    // Call the send-newsletter function
-    const response = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-newsletter`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${Deno.env.get("SUPABASE_ANON_KEY")}`,
-      },
-      body: JSON.stringify({ frequency }),
-    });
+    // Send newsletters for each frequency
+    for (const frequency of frequencies) {
+      console.log(`Processing ${frequency} newsletters...`);
+      
+      const response = await fetch(`${Deno.env.get("SUPABASE_URL")}/functions/v1/send-newsletter`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${Deno.env.get("SUPABASE_ANON_KEY")}`,
+        },
+        body: JSON.stringify({ frequency }),
+      });
 
-    const result = await response.json();
+      const result = await response.json();
+      results.push({ frequency, result });
+      
+      console.log(`${frequency} newsletter result:`, result);
+    }
 
-    console.log(`Newsletter scheduler result:`, result);
+    const totalSent = results.reduce((sum, r) => sum + (r.result.sent || 0), 0);
+    const totalFailed = results.reduce((sum, r) => sum + (r.result.failed || 0), 0);
+
+    console.log(`Newsletter scheduler complete: ${totalSent} sent, ${totalFailed} failed across all frequencies`);
 
     return new Response(
       JSON.stringify({
-        message: `${frequency} newsletter scheduled`,
-        result
+        message: "Newsletter batch complete",
+        sent: totalSent,
+        failed: totalFailed,
+        total: totalSent + totalFailed,
+        details: results
       }),
       {
         status: 200,
