@@ -57,12 +57,15 @@ const Dashboard = () => {
   // Placeholder username - will be replaced with actual user data
   const userName = "Alex";
 
-  const filteredQuotes = quotes.filter((quote) =>
-    quote.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    quote.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    quote.book.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    quote.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const filteredQuotes = quotes.filter((quote) => {
+    if (searchQuery === "favorite:true") {
+      return quote.favorite;
+    }
+    return quote.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
+           quote.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+           quote.book.toLowerCase().includes(searchQuery.toLowerCase()) ||
+           quote.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+  });
 
   const handleAddQuote = () => {
     setShowAuthRequired(true);
@@ -110,7 +113,23 @@ const Dashboard = () => {
           {/* Stats Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-2xl mx-auto mb-8">
             {stats.map((stat, index) => (
-              <GlassCard key={index} variant="subtle" className="p-4 md:p-6 text-center">
+              <GlassCard 
+                key={index} 
+                variant="subtle" 
+                interactive 
+                className="p-4 md:p-6 text-center cursor-pointer transition-all duration-200 hover:scale-105"
+                onClick={() => {
+                  if (stat.label === "Favorites") {
+                    setSearchQuery("favorite:true");
+                  } else if (stat.label === "Authors") {
+                    // Could open authors modal or filter
+                    console.log("Show authors");
+                  } else {
+                    // Show all quotes
+                    setSearchQuery("");
+                  }
+                }}
+              >
                 <div className="flex items-center justify-center mb-2 text-accent">
                   {stat.icon}
                 </div>
