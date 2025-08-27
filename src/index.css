@@ -228,6 +228,16 @@
     100% { transform: translateX(100%); }
   }
   
+  @keyframes morphToHero {
+    0% {
+      transform: translate(0, 0) scale(1);
+    }
+    100% {
+      transform: translate(-50vw, -40vh) scale(0.6);
+      opacity: 0;
+    }
+  }
+  
   .glass-shimmer {
     position: relative;
     overflow: hidden;
@@ -242,5 +252,9 @@
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
     animation: glass-shimmer 2s infinite;
+  }
+  
+  .animate-morphToHero {
+    animation: morphToHero 1.5s ease-in-out forwards;
   }
 }
