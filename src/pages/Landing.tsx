@@ -120,7 +120,7 @@ const Landing = () => {
         
         <main className="relative">
           {/* Hero Section */}
-          <section className="relative px-4 text-center h-screen flex items-center justify-center">
+          <section className="relative px-4 text-center h-screen flex items-center justify-center -mt-20">
             <div className="max-w-4xl mx-auto">
               <h1 className={`text-6xl md:text-8xl font-bold mb-6 text-glass bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text transition-all duration-500 ${
                 animationPhase === 'complete' ? 'animate-fade-in' : ''
