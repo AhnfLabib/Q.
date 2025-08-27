@@ -135,10 +135,10 @@ const Landing = () => {
               <h1 className={`text-6xl md:text-8xl font-bold mb-6 text-glass bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text transition-all duration-500 ${
                 animationPhase === 'complete' ? 'animate-fade-in' : ''
               }`}>
-                <span className={animationPhase === 'transition' ? 'opacity-0' : 'opacity-100 transition-opacity delay-300 duration-500'}>
+                <span className={`cursor-pointer transition-all duration-300 hover:text-accent hover:scale-110 inline-block ${animationPhase === 'transition' ? 'opacity-0' : 'opacity-100 transition-opacity delay-300 duration-500'}`}>
                   Welcome to{' '}
                 </span>
-                <span className={animationPhase === 'transition' ? 'opacity-0' : 'opacity-100 transition-opacity delay-500 duration-500'}>
+                <span className={`cursor-pointer transition-all duration-300 hover:scale-110 hover:text-accent inline-block ${animationPhase === 'transition' ? 'opacity-0' : 'opacity-100 transition-opacity delay-500 duration-500'}`}>
                   Q<span className="text-accent">.</span>
                 </span>
               </h1>
