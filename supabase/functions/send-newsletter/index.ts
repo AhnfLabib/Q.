@@ -2,8 +2,6 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 import { Resend } from "npm:resend@2.0.0";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -21,10 +19,29 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
+    // Validate environment variables
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+
+    console.log("Environment variables check:");
+    console.log("SUPABASE_URL:", supabaseUrl ? "✓ Present" : "✗ Missing");
+    console.log("SUPABASE_SERVICE_ROLE_KEY:", supabaseServiceKey ? "✓ Present" : "✗ Missing");
+    console.log("RESEND_API_KEY:", resendApiKey ? "✓ Present" : "✗ Missing");
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      throw new Error("Missing required Supabase environment variables");
+    }
+
+    if (!resendApiKey) {
+      throw new Error("Missing RESEND_API_KEY environment variable");
+    }
+
+    // Initialize Supabase client
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    
+    // Initialize Resend client
+    const resend = new Resend(resendApiKey);
 
     let body: NewsletterRequest = {};
     if (req.method === "POST") {
