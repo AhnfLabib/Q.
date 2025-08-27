@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { GlassCard } from "@/components/GlassCard";
 import { GlassButton } from "@/components/GlassButton";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { PaperPlane } from "@/components/PaperPlane";
 import { Eye, Mail, Layout, BookOpen, Heart, Search, ChevronDown } from "lucide-react";
 
 const Landing = () => {
@@ -72,6 +73,8 @@ const Landing = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
+      {/* Animated Paper Plane Background */}
+      <PaperPlane />
       {/* Splash Screen */}
       {animationPhase === 'splash' && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center glass-surface-subtle">

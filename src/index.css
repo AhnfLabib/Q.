@@ -240,6 +240,47 @@
       transform: translate(-50%, -50%) scale(0.4) translate(0, -20vh);
     }
   }
+
+  @keyframes paperPlaneFly {
+    0% {
+      transform: translate(100vw, 80vh) rotate(225deg);
+    }
+    12.5% {
+      transform: translate(20vw, 20vh) rotate(180deg);
+    }
+    25% {
+      transform: translate(-10vw, 60vh) rotate(135deg);
+    }
+    37.5% {
+      transform: translate(30vw, 90vh) rotate(90deg);
+    }
+    50% {
+      transform: translate(80vw, 70vh) rotate(45deg);
+    }
+    62.5% {
+      transform: translate(90vw, 30vh) rotate(0deg);
+    }
+    75% {
+      transform: translate(50vw, 10vh) rotate(315deg);
+    }
+    87.5% {
+      transform: translate(10vw, 40vh) rotate(270deg);
+    }
+    100% {
+      transform: translate(100vw, 80vh) rotate(225deg);
+    }
+  }
+
+  @keyframes trailFade {
+    0% {
+      opacity: 0.8;
+      transform: translate(-100%, -50%) scaleX(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-100%, -50%) scaleX(0.3);
+    }
+  }
   
   .glass-shimmer {
     position: relative;
@@ -255,5 +296,64 @@
     height: 100%;
     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
     animation: glass-shimmer 2s infinite;
+  }
+
+  /* Paper Plane Animation */
+  .paper-plane-animated {
+    position: absolute;
+    will-change: transform;
+    animation: paperPlaneFly 45s linear infinite;
+    filter: drop-shadow(0 0 8px hsl(var(--accent-red) / 0.3));
+  }
+
+  .paper-plane-animated::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      hsl(var(--accent-red) / 0.3) 20%,
+      hsl(var(--accent-red) / 0.6) 50%,
+      hsl(var(--accent-red) / 0.3) 80%,
+      transparent 100%
+    );
+    transform: translate(-100%, -50%);
+    border-radius: 2px;
+    animation: trailFade 0.8s ease-out infinite;
+  }
+
+  /* Responsive Paper Plane */
+  @media (max-width: 768px) {
+    .paper-plane-animated {
+      animation-duration: 35s;
+    }
+    
+    .paper-plane-animated svg {
+      width: 20px !important;
+      height: 20px !important;
+    }
+    
+    .paper-plane-animated::before {
+      width: 120px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .paper-plane-animated {
+      animation-duration: 30s;
+    }
+    
+    .paper-plane-animated svg {
+      width: 16px !important;
+      height: 16px !important;
+    }
+    
+    .paper-plane-animated::before {
+      width: 80px;
+    }
   }
 }
