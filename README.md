@@ -1,73 +1,125 @@
-# Welcome to your Lovable project
+# Q. - Your Personal Quote Library
 
-## Project info
+A premium personal quote collection app with beautiful glassmorphism design. Collect, organize, and discover meaningful quotes that inspire you daily.
 
-**URL**: https://lovable.dev/projects/70bc9a0c-63c6-4670-83f8-e45d2bb16b21
+![Q. Quote Library](https://lovable.dev/opengraph-image-p98pqg.png)
 
-## How can I edit this code?
+## ✨ Features
 
-There are several ways of editing your application.
+- **📚 Quote Collection**: Save and organize your favorite quotes
+- **🎨 Beautiful Design**: Glassmorphism UI with dark/light theme support
+- **📱 Responsive**: Perfect experience on desktop and mobile
+- **🔍 Smart Search**: Find quotes by content, author, or tags
+- **💌 Daily Newsletter**: Receive daily inspiration via email
+- **📤 Share Quotes**: Generate beautiful quote images to share
+- **🔐 Secure Authentication**: User accounts with Supabase backend
+- **⭐ Favorites**: Mark and organize your most cherished quotes
 
-**Use Lovable**
+## 🚀 Technology Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/70bc9a0c-63c6-4670-83f8-e45d2bb16b21) and start prompting.
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, shadcn/ui components
+- **Backend**: Supabase (Database, Auth, Edge Functions)
+- **State Management**: TanStack Query
+- **Routing**: React Router
+- **Theme**: next-themes for dark/light mode
+- **Icons**: Lucide React
 
-Changes made via Lovable will be committed automatically to this repo.
+## 📦 Installation
 
-**Use your preferred IDE**
+### Prerequisites
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Node.js (v18 or higher)
+- npm or yarn
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Setup
 
-Follow these steps:
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd q-quote-library
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Install dependencies
+npm install
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Set up environment variables
+cp .env.example .env
+# Add your Supabase URL and API key to .env
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 🔧 Environment Variables
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Create a `.env` file in the root directory:
 
-**Use GitHub Codespaces**
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🏗️ Available Scripts
 
-## What technologies are used for this project?
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run build:dev` - Build for development
+- `npm run lint` - Run ESLint
+- `npm run preview` - Preview production build
 
-This project is built with:
+## 🗄️ Database Schema
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+The app uses Supabase with the following main tables:
 
-## How can I deploy this project?
+- **quotes** - Store user quotes with metadata
+- **users** - User profiles and preferences
+- **quote_favorites** - User favorite quotes
+- **newsletter_subscriptions** - Email newsletter management
 
-Simply open [Lovable](https://lovable.dev/projects/70bc9a0c-63c6-4670-83f8-e45d2bb16b21) and click on Share -> Publish.
+## 🚀 Deployment
 
-## Can I connect a custom domain to my Lovable project?
+### Vercel (Recommended)
 
-Yes, you can!
+1. Push your code to GitHub
+2. Connect your GitHub repo to Vercel
+3. Add environment variables in Vercel dashboard
+4. Deploy automatically
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Netlify
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+1. Build the project: `npm run build`
+2. Deploy the `dist` folder to Netlify
+3. Configure environment variables
+
+## 🎨 Design System
+
+The app uses a custom design system built on:
+
+- **Colors**: HSL-based color tokens in `index.css`
+- **Components**: Customized shadcn/ui components
+- **Typography**: Inter font family
+- **Glassmorphism effects**: Custom CSS with backdrop-blur
+- **Responsive breakpoints**: Tailwind CSS defaults
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with [Lovable](https://lovable.dev) - AI-powered development platform
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- Backend powered by [Supabase](https://supabase.com/)
+- Icons by [Lucide](https://lucide.dev/)
+
+---
+
+**Q.** - Where meaningful quotes find their home. ✨
