@@ -2,7 +2,7 @@
 
 A premium personal quote collection app with beautiful glassmorphism design. Collect, organize, and discover meaningful quotes that inspire you daily.
 
-![Q. Quote Library](https://lovable.dev/opengraph-image-p98pqg.png)
+![Q. Quote Library]
 
 ## ✨ Features
 
