@@ -2,8 +2,6 @@
 
 A premium personal quote collection app with beautiful glassmorphism design. Collect, organize, and discover meaningful quotes that inspire you daily.
 
-![Q. Quote Library]
-
 ## ✨ Features
 
 - **📚 Quote Collection**: Save and organize your favorite quotes
