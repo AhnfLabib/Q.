@@ -12,9 +12,3 @@ verify_jwt = false
 
 [functions.newsletter-scheduler]
 verify_jwt = false
-
-[functions.send-confirmation-email]
-verify_jwt = false
-
-[functions.send-welcome-email]
-verify_jwt = false
