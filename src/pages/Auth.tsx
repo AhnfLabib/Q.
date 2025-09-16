@@ -17,9 +17,21 @@ const Auth = () => {
   const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [verificationSuccess, setVerificationSuccess] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Check for verification success
+    const verified = searchParams.get('verified');
+    if (verified === 'true') {
+      setVerificationSuccess(true);
+      setIsLogin(true);
+      toast({
+        title: "Verification successful!",
+        description: "Please sign in to access your account.",
+      });
+    }
+
     // Check if user is already authenticated
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -38,7 +50,7 @@ const Auth = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [navigate, searchParams]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,9 +91,21 @@ const Auth = () => {
         });
 
         if (error) {
+          let errorMessage = error.message;
+          let errorTitle = "Sign up failed";
+          
+          // Handle specific error cases
+          if (error.message.includes("User already registered") || 
+              error.message.includes("already registered") ||
+              error.message.includes("already been registered")) {
+            errorTitle = "Account already exists";
+            errorMessage = "An account with this email already exists. Please sign in instead.";
+            setIsLogin(true);
+          }
+          
           toast({
-            title: "Sign up failed",
-            description: error.message,
+            title: errorTitle,
+            description: errorMessage,
             variant: "destructive",
           });
           return;
@@ -111,10 +135,12 @@ const Auth = () => {
             Q<span className="text-accent">.</span>
           </h1>
           <h2 className="text-2xl font-semibold mb-2">
-            {isLogin ? "Welcome back" : "Create your account"}
+            {verificationSuccess ? "Verification successful!" : 
+             isLogin ? "Welcome back" : "Create your account"}
           </h2>
           <p className="text-muted-foreground">
-            {isLogin ? "Sign in to access your quotes" : "Start building your quote collection"}
+            {verificationSuccess ? "Please sign in to access your account" :
+             isLogin ? "Sign in to access your quotes" : "Start building your quote collection"}
           </p>
         </div>
 

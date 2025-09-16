@@ -9,6 +9,7 @@ import QuoteShareDialog from "@/components/QuoteShareDialog";
 import { BookOpen, Users, Heart, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useFirstTimeUser } from "@/hooks/useFirstTimeUser";
 import { useQuotes } from "@/hooks/useQuotes";
 import { Quote, QuoteFormData } from "@/types/database";
 import { triggerNewsletterForUser } from "@/utils/triggerNewsletter";
@@ -36,6 +37,7 @@ const convertQuoteToLegacy = (quote: Quote): LegacyQuote => ({
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading, isAuthenticated } = useAuth();
+  const { isFirstTimeUser, loading: firstTimeLoading } = useFirstTimeUser();
   const { quotes, loading: quotesLoading, addQuote, updateQuote, deleteQuote, toggleFavorite, incrementShareCount } = useQuotes(user?.id);
   
   const [searchQuery, setSearchQuery] = useState("");
@@ -55,6 +57,17 @@ const Dashboard = () => {
   const legacyQuotes = quotes.map(convertQuoteToLegacy);
   const fullName = user?.user_metadata?.name || user?.email?.split("@")[0] || "User";
   const userName = fullName.split(" ")[0]; // Extract first name only
+
+  // Welcome first-time users
+  useEffect(() => {
+    if (!firstTimeLoading && isFirstTimeUser && !quotesLoading) {
+      toast({
+        title: `Welcome to Q., ${userName}! 🎉`,
+        description: "Check your email for a getting started guide, then click the + button to add your first quote!",
+        duration: 8000,
+      });
+    }
+  }, [firstTimeLoading, isFirstTimeUser, quotesLoading, userName]);
 
   const filteredQuotes = legacyQuotes.filter((quote) => {
     if (searchQuery === "favorite:true") {
