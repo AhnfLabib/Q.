@@ -225,7 +225,7 @@ const Landing = () => {
           <section className={`px-4 py-16 text-center transition-all duration-500 delay-1200 ${
             animationPhase === 'complete' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}>
-            <GlassCard variant="strong" className="max-w-2xl mx-auto p-8">
+            <div className="max-w-2xl mx-auto">
               <h2 className="text-3xl font-bold mb-4">Ready to start collecting?</h2>
               <p className="text-lg text-muted-foreground mb-6">
                 Join thousands of readers who use Q. to build their personal quote libraries.
@@ -238,7 +238,7 @@ const Landing = () => {
               >
                 Get Started Free
               </GlassButton>
-            </GlassCard>
+            </div>
           </section>
         </main>
       </div>
