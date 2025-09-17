@@ -249,7 +249,7 @@ const Landing = () => {
           <div className="max-w-6xl mx-auto text-center">
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>Created by <span className="font-medium text-foreground">Ahnaf Labib</span></p>
-              <p>© 2024 Ahnaf Labib. All rights reserved.</p>
+              <p>© 2025 Ahnaf Labib. All rights reserved.</p>
             </div>
           </div>
         </footer>
