@@ -1,0 +1,6 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" fill="white" rx="6"/>
+  <text x="16" y="24" font-family="SF Pro Display, Inter, system-ui, -apple-system, sans-serif" font-weight="700" font-size="20" text-anchor="middle" letter-spacing="-0.02em">
+    <tspan fill="#000000">Q</tspan><tspan fill="#dc2626" font-size="22">.</tspan>
+  </text>
+</svg>
