@@ -241,6 +241,18 @@ const Landing = () => {
             </div>
           </section>
         </main>
+        
+        {/* Footer */}
+        <footer className={`px-4 py-8 border-t border-glass-border/20 transition-all duration-500 delay-1400 ${
+          animationPhase === 'complete' ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+        }`}>
+          <div className="max-w-6xl mx-auto text-center">
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p>Created by <span className="font-medium text-foreground">Ahnaf Labib</span></p>
+              <p>© 2024 Ahnaf Labib. All rights reserved.</p>
+            </div>
+          </div>
+        </footer>
       </div>
 
     </div>

@@ -369,6 +369,18 @@ const Settings = () => {
             </GlassButton>
           </form>
         </GlassCard>
+
+        {/* About Section */}
+        <GlassCard className="mt-8 p-6">
+          <div className="text-center space-y-4">
+            <h3 className="text-lg font-semibold text-foreground">About Q.</h3>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <p>Personal Quote Library v1.0</p>
+              <p>Created by <span className="font-medium text-foreground">Ahnaf Labib</span></p>
+              <p>© 2024 Ahnaf Labib. All rights reserved.</p>
+            </div>
+          </div>
+        </GlassCard>
       </main>
     </div>
   );
