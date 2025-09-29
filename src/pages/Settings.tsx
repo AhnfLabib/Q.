@@ -208,27 +208,27 @@ const Settings = () => {
   return (
     <div className="min-h-screen">
       <div className="sticky top-0 z-50 w-full">
-        <GlassCard variant="strong" className="mx-4 mt-4 mb-6 px-6 py-4">
-          <div className="flex items-center space-x-4">
+        <GlassCard variant="strong" className="mx-4 mt-4 mb-6 px-4 md:px-6 py-3 md:py-4">
+          <div className="flex items-center space-x-3 md:space-x-4">
             <GlassButton
               variant="ghost"
               size="icon"
               onClick={() => navigate("/dashboard")}
-              className="glass-interactive"
+              className="glass-interactive min-h-[44px] min-w-[44px]"
             >
               <ArrowLeft className="h-4 w-4" />
             </GlassButton>
-            <h1 className="text-2xl font-bold">Settings</h1>
+            <h1 className="text-xl md:text-2xl font-bold">Settings</h1>
           </div>
         </GlassCard>
       </div>
 
-      <main className="pt-20 px-4 max-w-2xl mx-auto pb-12">
+      <main className="pt-20 px-4 max-w-2xl mx-auto pb-12 md:pb-6">
         {/* Profile Settings */}
-        <GlassCard className="mb-8 p-6">
-          <div className="flex items-center space-x-3 mb-6">
+        <GlassCard className="mb-6 md:mb-8 p-4 md:p-6">
+          <div className="flex items-center space-x-3 mb-4 md:mb-6">
             <User className="h-5 w-5 text-accent" />
-            <h2 className="text-xl font-semibold">Profile Information</h2>
+            <h2 className="text-lg md:text-xl font-semibold">Profile Information</h2>
           </div>
           
           <form onSubmit={updateProfile} className="space-y-4">
@@ -238,7 +238,7 @@ const Settings = () => {
                 id="displayName"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="mt-1 glass-surface border-glass-border bg-transparent"
+                className="mt-1 glass-surface border-glass-border bg-transparent min-h-[44px]"
                 placeholder="Your name"
               />
             </div>
@@ -247,7 +247,7 @@ const Settings = () => {
               type="submit" 
               variant="accent" 
               disabled={loading}
-              className="w-full"
+              className="w-full min-h-[44px]"
             >
               <Save className="mr-2 h-4 w-4" />
               Update Profile
@@ -256,10 +256,10 @@ const Settings = () => {
         </GlassCard>
 
         {/* Email Settings */}
-        <GlassCard className="mb-8 p-6">
-          <div className="flex items-center space-x-3 mb-6">
+        <GlassCard className="mb-6 md:mb-8 p-4 md:p-6">
+          <div className="flex items-center space-x-3 mb-4 md:mb-6">
             <Mail className="h-5 w-5 text-accent" />
-            <h2 className="text-xl font-semibold">Email Address</h2>
+            <h2 className="text-lg md:text-xl font-semibold">Email Address</h2>
           </div>
           
           <form onSubmit={updateEmail} className="space-y-4">
@@ -270,7 +270,7 @@ const Settings = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 glass-surface border-glass-border bg-transparent"
+                className="mt-1 glass-surface border-glass-border bg-transparent min-h-[44px]"
                 placeholder="your@email.com"
               />
             </div>
@@ -279,7 +279,7 @@ const Settings = () => {
               type="submit" 
               variant="accent" 
               disabled={loading}
-              className="w-full"
+              className="w-full min-h-[44px]"
             >
               <Save className="mr-2 h-4 w-4" />
               Update Email
@@ -288,20 +288,20 @@ const Settings = () => {
         </GlassCard>
 
         {/* Newsletter Settings */}
-        <GlassCard className="mb-8 p-6">
-          <div className="flex items-center space-x-3 mb-6">
+        <GlassCard className="mb-6 md:mb-8 p-4 md:p-6">
+          <div className="flex items-center space-x-3 mb-4 md:mb-6">
             <Bell className="h-5 w-5 text-accent" />
-            <h2 className="text-xl font-semibold">Newsletter Preferences</h2>
+            <h2 className="text-lg md:text-xl font-semibold">Newsletter Preferences</h2>
           </div>
           
           <form onSubmit={updateNewsletterPreferences} className="space-y-4">
             <div>
               <Label htmlFor="newsletterFrequency">Newsletter Frequency</Label>
               <Select value={newsletterFrequency} onValueChange={setNewsletterFrequency}>
-                <SelectTrigger className="mt-1 glass-surface border-glass-border bg-transparent">
+                <SelectTrigger className="mt-1 glass-surface border-glass-border bg-transparent min-h-[44px]">
                   <SelectValue placeholder="Select frequency" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="glass-surface border-glass-border">
                   <SelectItem value="daily">Daily - Every morning</SelectItem>
                   <SelectItem value="weekly">Weekly - Every Monday</SelectItem>
                   <SelectItem value="monthly">Monthly - First of the month</SelectItem>
@@ -318,7 +318,7 @@ const Settings = () => {
               type="submit" 
               variant="accent" 
               disabled={loading}
-              className="w-full"
+              className="w-full min-h-[44px]"
             >
               <Save className="mr-2 h-4 w-4" />
               Update Newsletter Preferences
@@ -327,10 +327,10 @@ const Settings = () => {
         </GlassCard>
 
         {/* Password Settings */}
-        <GlassCard className="p-6">
-          <div className="flex items-center space-x-3 mb-6">
+        <GlassCard className="p-4 md:p-6 mb-6">
+          <div className="flex items-center space-x-3 mb-4 md:mb-6">
             <Lock className="h-5 w-5 text-accent" />
-            <h2 className="text-xl font-semibold">Change Password</h2>
+            <h2 className="text-lg md:text-xl font-semibold">Change Password</h2>
           </div>
           
           <form onSubmit={updatePassword} className="space-y-4">
@@ -341,7 +341,7 @@ const Settings = () => {
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="mt-1 glass-surface border-glass-border bg-transparent"
+                className="mt-1 glass-surface border-glass-border bg-transparent min-h-[44px]"
                 placeholder="Enter new password"
               />
             </div>
@@ -353,7 +353,7 @@ const Settings = () => {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="mt-1 glass-surface border-glass-border bg-transparent"
+                className="mt-1 glass-surface border-glass-border bg-transparent min-h-[44px]"
                 placeholder="Confirm new password"
               />
             </div>
@@ -362,7 +362,7 @@ const Settings = () => {
               type="submit" 
               variant="accent" 
               disabled={loading || !newPassword || !confirmPassword}
-              className="w-full"
+              className="w-full min-h-[44px]"
             >
               <Save className="mr-2 h-4 w-4" />
               Update Password
