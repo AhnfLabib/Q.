@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import { GlassCard } from "@/components/GlassCard";
 import { GlassButton } from "@/components/GlassButton";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Eye, Mail, Layout, BookOpen, Heart, Search, ChevronDown } from "lucide-react";
 
 const Landing = () => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [animationPhase, setAnimationPhase] = useState<'splash' | 'transition' | 'complete'>('splash');
 
   useEffect(() => {
@@ -112,18 +114,22 @@ const Landing = () => {
               </h1>
               <div className="flex items-center space-x-3">
                 <ThemeToggle />
-                <GlassButton
-                  variant="ghost"
-                  onClick={() => navigate('/auth')}
-                >
-                  Sign In
-                </GlassButton>
-                <GlassButton
-                  variant="accent"
-                  onClick={() => navigate('/auth?mode=signup')}
-                >
-                  Get Started
-                </GlassButton>
+                {!isMobile && (
+                  <>
+                    <GlassButton
+                      variant="ghost"
+                      onClick={() => navigate('/auth')}
+                    >
+                      Sign In
+                    </GlassButton>
+                    <GlassButton
+                      variant="accent"
+                      onClick={() => navigate('/auth?mode=signup')}
+                    >
+                      Get Started
+                    </GlassButton>
+                  </>
+                )}
               </div>
             </div>
           </div>
