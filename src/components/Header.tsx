@@ -1,7 +1,7 @@
 import { GlassCard } from "./GlassCard";
 import { GlassButton } from "./GlassButton";
-import { Search, Plus, LogOut, Grid3X3, List, Settings } from "lucide-react";
-import { useState } from "react";
+import { Search, Plus, LogOut, Grid3X3, List, Settings, X } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import { Input } from "./ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -32,9 +32,29 @@ export function Header({
   stats 
 }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchExpanded, setSearchExpanded] = useState(false);
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Focus input when search expands
+  useEffect(() => {
+    if (searchExpanded && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [searchExpanded]);
+
+  // Close search when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchExpanded && searchInputRef.current && !searchInputRef.current.contains(e.target as Node)) {
+        setSearchExpanded(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [searchExpanded]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
@@ -63,11 +83,23 @@ export function Header({
     <header className="fixed top-0 left-0 right-0 z-50 w-full">
       <GlassCard variant="strong" className="mx-4 mt-4 mb-6 px-4 md:px-6 py-3 md:py-4 shadow-sm">
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo and Mobile Search Icon */}
           <div className="flex items-center space-x-3 md:space-x-6">
             <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
               Q<span className="text-accent text-3xl md:text-4xl">.</span>
             </h1>
+            
+            {/* Mobile Search Icon */}
+            {isMobile && !searchExpanded && (
+              <GlassButton
+                variant="ghost"
+                size="icon"
+                onClick={() => setSearchExpanded(true)}
+                className="h-8 w-8"
+              >
+                <Search className="h-4 w-4" />
+              </GlassButton>
+            )}
             
             {/* Desktop Search */}
             {!isMobile && (
@@ -119,6 +151,18 @@ export function Header({
               </GlassButton>
             )}
 
+            {/* Add Quote - Mobile Icon */}
+            {isMobile && (
+              <GlassButton
+                variant="ghost"
+                size="icon"
+                onClick={onAddQuote}
+                className="h-8 w-8"
+              >
+                <Plus className="h-4 w-4" />
+              </GlassButton>
+            )}
+
             {/* Theme Toggle */}
             <ThemeToggle />
 
@@ -151,17 +195,33 @@ export function Header({
           </div>
         </div>
 
-        {/* Mobile Search */}
-        {isMobile && (
-          <div className="mt-4">
+        {/* Mobile Expandable Search */}
+        {isMobile && searchExpanded && (
+          <div className="mt-3 animate-fade-in">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
+                ref={searchInputRef}
                 placeholder="Search quotes..."
                 value={searchQuery}
                 onChange={handleSearchChange}
-                className="w-full pl-10 glass-surface border-glass-border bg-transparent placeholder:text-muted-foreground/60 shadow-none"
+                onKeyDown={(e) => {
+                  if (e.key === 'Escape') {
+                    setSearchExpanded(false);
+                    setSearchQuery('');
+                  }
+                }}
+                className="w-full pl-10 pr-10 glass-surface border-glass-border bg-transparent placeholder:text-muted-foreground/60 shadow-none"
               />
+              <button
+                onClick={() => {
+                  setSearchExpanded(false);
+                  setSearchQuery('');
+                }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
           </div>
         )}

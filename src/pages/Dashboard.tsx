@@ -262,13 +262,13 @@ const Dashboard = () => {
           </h1>
           
           {/* Stats Cards */}
-          <div className={`grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-6 max-w-2xl mx-auto mb-8`}>
+          <div className={`grid grid-cols-1 sm:grid-cols-3 ${isMobile ? 'gap-2' : 'gap-3 md:gap-6'} max-w-2xl mx-auto mb-8`}>
             {stats.map((stat, index) => (
               <GlassCard 
                 key={index} 
                 variant="subtle" 
                 interactive 
-                className={`${isMobile ? 'p-4' : 'p-4 md:p-6'} text-center cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95`}
+                className={`${isMobile ? 'p-3' : 'p-4 md:p-6'} text-center cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95`}
                 onClick={() => {
                   lightTap(); // Haptic feedback
                   if (stat.label === "Favorites") {
@@ -280,11 +280,13 @@ const Dashboard = () => {
                   }
                 }}
               >
-                <div className="flex items-center justify-center mb-2 text-accent">
-                  {stat.icon}
+                <div className={`flex items-center justify-center ${isMobile ? 'mb-1' : 'mb-2'} text-accent`}>
+                  <div className={isMobile ? 'h-4 w-4' : ''}>
+                    {stat.icon}
+                  </div>
                 </div>
-                <div className={`${isMobile ? 'text-2xl' : 'text-2xl md:text-3xl'} font-bold mb-1`}>{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className={`${isMobile ? 'text-xl' : 'text-2xl md:text-3xl'} font-bold ${isMobile ? 'mb-0.5' : 'mb-1'}`}>{stat.value}</div>
+                <div className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground`}>{stat.label}</div>
               </GlassCard>
             ))}
           </div>
