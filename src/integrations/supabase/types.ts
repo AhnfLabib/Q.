@@ -113,27 +113,36 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          email_verified_at: string | null
+          first_login_completed: boolean | null
           id: string
           name: string | null
           newsletter_frequency: string | null
           updated_at: string
           user_id: string
+          welcome_email_sent: boolean | null
         }
         Insert: {
           created_at?: string
+          email_verified_at?: string | null
+          first_login_completed?: boolean | null
           id?: string
           name?: string | null
           newsletter_frequency?: string | null
           updated_at?: string
           user_id: string
+          welcome_email_sent?: boolean | null
         }
         Update: {
           created_at?: string
+          email_verified_at?: string | null
+          first_login_completed?: boolean | null
           id?: string
           name?: string | null
           newsletter_frequency?: string | null
           updated_at?: string
           user_id?: string
+          welcome_email_sent?: boolean | null
         }
         Relationships: []
       }
